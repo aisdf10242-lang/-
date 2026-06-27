@@ -606,6 +606,143 @@
       font-weight: 950;
     }
 
+
+    .search-recommend-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(260px, 0.85fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .search-primary-card {
+      min-height: 390px;
+      padding: 20px;
+      border-radius: 34px;
+      background:
+        radial-gradient(circle at 18% 12%, rgba(105, 190, 200, 0.18), transparent 30%),
+        #ffffff;
+      border-color: rgba(105, 190, 200, 0.5);
+      box-shadow: 0 24px 54px rgba(17, 24, 39, 0.10);
+    }
+
+    .search-primary-card .photo {
+      height: 220px;
+      border-radius: 28px;
+    }
+
+    .search-primary-card .photo span {
+      font-size: 6.2rem;
+    }
+
+    .search-primary-card .product-name {
+      font-size: clamp(1.45rem, 3vw, 2.15rem);
+      line-height: 1.13;
+    }
+
+    .search-primary-card .product-desc {
+      font-size: 1rem;
+    }
+
+    .search-primary-card .score-badge {
+      min-width: 82px;
+      padding: 12px 13px;
+      border-radius: 22px;
+    }
+
+    .search-primary-card .score-badge strong {
+      font-size: 1.55rem;
+    }
+
+    .search-rank-label {
+      position: absolute;
+      z-index: 2;
+      top: 18px;
+      left: 18px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(16, 24, 40, 0.92);
+      color: #ffffff;
+      font-size: 0.83rem;
+      font-weight: 950;
+      box-shadow: 0 12px 24px rgba(16, 24, 40, 0.18);
+    }
+
+    .search-secondary-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .search-secondary-card {
+      min-height: 186px;
+      grid-template-columns: 128px minmax(0, 1fr);
+      grid-template-rows: 1fr;
+      align-items: stretch;
+      padding: 13px;
+      border-radius: 24px;
+    }
+
+    .search-secondary-card .photo {
+      height: 100%;
+      min-height: 154px;
+      border-radius: 20px;
+    }
+
+    .search-secondary-card .photo span {
+      font-size: 3.4rem;
+    }
+
+    .search-secondary-card .card-top {
+      min-width: 0;
+    }
+
+    .search-secondary-card .product-name {
+      font-size: 1.02rem;
+    }
+
+    .search-secondary-card .tag-row {
+      display: none;
+    }
+
+    @media (max-width: 980px) {
+      .search-recommend-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .search-secondary-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .search-secondary-card {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
+      }
+
+      .search-secondary-card .photo {
+        height: 136px;
+        min-height: 0;
+      }
+    }
+
+    @media (max-width: 680px) {
+      .search-primary-card {
+        min-height: 0;
+        border-radius: 26px;
+        padding: 15px;
+      }
+
+      .search-primary-card .photo {
+        height: 170px;
+        border-radius: 22px;
+      }
+
+      .search-secondary-list {
+        grid-template-columns: 1fr;
+      }
+    }
+
     .back-row {
       display: flex;
       justify-content: space-between;
@@ -5383,6 +5520,16 @@
       `;
     }
 
+
+
+    function renderSearchPrimaryCard(product) {
+      return renderCard(product).replace('class="product-card"', 'class="product-card search-primary-card"').replace('<div class="photo"', '<span class="search-rank-label">1위 추천 상품</span><div class="photo"');
+    }
+
+    function renderSearchSecondaryCard(product, rank) {
+      return renderCard(product).replace('class="product-card"', `class="product-card search-secondary-card"`).replace('<div class="photo"', `<span class="search-rank-label">${rank}위</span><div class="photo"`);
+    }
+
     function findSearchCategories(query) {
       const normalizedQuery = query.trim().toLowerCase();
       if (!normalizedQuery) return [];
@@ -5439,18 +5586,24 @@
         return { category, items: topItems };
       }).filter(group => group.items.length);
 
-      searchContent.innerHTML = groups.map(group => `
-        <article class="category-group">
-          <div class="group-head">
-            <h3 class="group-title"><span class="group-icon">${categoryIcons[group.category] || "📦"}</span>${escapeHtml(group.category)}</h3>
-            <span class="group-count">${modes[activeMode].label} 상위 ${group.items.length}개</span>
-          </div>
-          <div class="product-grid">
-            ${group.items.map(product => renderCard(product)).join("")}
-          </div>
-          <p class="search-category-note">검색어와 연결된 카테고리에서 선택한 기준의 점수순으로 정렬했습니다.</p>
-        </article>
-      `).join("");
+      searchContent.innerHTML = groups.map(group => {
+        const [topItem, ...secondaryItems] = group.items;
+        return `
+          <article class="category-group">
+            <div class="group-head">
+              <h3 class="group-title"><span class="group-icon">${categoryIcons[group.category] || "📦"}</span>${escapeHtml(group.category)}</h3>
+              <span class="group-count">${modes[activeMode].label} 상위 ${group.items.length}개</span>
+            </div>
+            <div class="search-recommend-layout">
+              ${topItem ? renderSearchPrimaryCard(topItem) : ""}
+              <div class="search-secondary-list">
+                ${secondaryItems.map((product, index) => renderSearchSecondaryCard(product, index + 2)).join("")}
+              </div>
+            </div>
+            <p class="search-category-note">검색어와 연결된 카테고리에서 선택한 기준의 점수순으로 정렬했습니다.</p>
+          </article>
+        `;
+      }).join("");
 
       searchContent.querySelectorAll("[data-product-id]").forEach(card => {
         card.addEventListener("click", () => {
