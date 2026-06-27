@@ -1,0 +1,5453 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>스마트 소비 상품관</title>
+  <style>
+    :root {
+      --bg: #f7fbfd;
+      --surface: #ffffff;
+      --surface-2: #f4f7fc;
+      --text: #111827;
+      --muted: #6b7280;
+      --line: #e6edf4;
+      --primary: #69bec8;
+      --primary-dark: #348a96;
+      --primary-soft: #e8f8fa;
+      --blue: #2946a3;
+      --yellow: #f7c948;
+      --danger: #ff6b6b;
+      --shadow: 0 18px 48px rgba(17, 24, 39, 0.08);
+      --card-shadow: 0 12px 30px rgba(17, 24, 39, 0.06);
+      --radius-xl: 30px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --max: 1180px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 18% 0%, rgba(105, 190, 200, 0.15), transparent 30%),
+        radial-gradient(circle at 90% 12%, rgba(41, 70, 163, 0.08), transparent 25%),
+        var(--bg);
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .app {
+      width: min(100%, var(--max));
+      margin: 0 auto;
+      padding: 26px 18px 60px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.84);
+      border: 1px solid rgba(230, 237, 244, 0.9);
+      border-radius: 36px;
+      padding: 28px 24px 34px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      pointer-events: none;
+    }
+
+    .hero::before {
+      width: 180px;
+      height: 180px;
+      background: rgba(105, 190, 200, 0.13);
+      left: -70px;
+      top: -70px;
+    }
+
+    .hero::after {
+      width: 230px;
+      height: 230px;
+      background: rgba(41, 70, 163, 0.07);
+      right: -90px;
+      bottom: -90px;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .mascot {
+      width: 142px;
+      height: 106px;
+      margin: 0 auto 8px;
+      display: block;
+      filter: drop-shadow(0 8px 18px rgba(41, 70, 163, 0.08));
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 8px;
+      padding: 8px 14px;
+      color: var(--primary-dark);
+      font-weight: 800;
+      background: var(--primary-soft);
+      border: 1px solid #cfedf1;
+      border-radius: 999px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.1rem, 5.5vw, 4.5rem);
+      letter-spacing: -0.075em;
+      line-height: 1.02;
+      color: #101828;
+    }
+
+    .subtitle {
+      margin: 16px auto 24px;
+      max-width: 760px;
+      color: #6a7282;
+      font-size: clamp(1rem, 2.5vw, 1.28rem);
+      line-height: 1.6;
+      font-weight: 700;
+    }
+
+    .subtitle strong {
+      color: var(--primary-dark);
+    }
+
+    .search-wrap {
+      width: min(100%, 900px);
+      margin: 0 auto;
+      padding: 7px;
+      border-radius: 24px;
+      background: rgba(105, 190, 200, 0.12);
+      box-shadow: 0 10px 0 rgba(105, 190, 200, 0.05);
+    }
+
+    .search-form {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+    }
+
+    .search-field {
+      width: 100%;
+      height: 70px;
+      border: 3px solid var(--primary);
+      outline: none;
+      border-radius: 20px;
+      padding: 0 24px;
+      font-size: clamp(1.05rem, 3vw, 1.45rem);
+      font-weight: 800;
+      color: #0f172a;
+      background: #ffffff;
+      transition: box-shadow 180ms ease, transform 180ms ease;
+    }
+
+    .search-submit {
+      min-width: 112px;
+      height: 70px;
+      border: 0;
+      border-radius: 20px;
+      padding: 0 20px;
+      background: #101828;
+      color: #fff;
+      font-size: 1.05rem;
+      font-weight: 950;
+      box-shadow: 0 12px 24px rgba(16, 24, 40, 0.14);
+      transition: transform 160ms ease, box-shadow 160ms ease;
+    }
+
+    .search-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 30px rgba(16, 24, 40, 0.18);
+    }
+
+    .search-field::placeholder {
+      color: #9ba6b8;
+    }
+
+    .search-field:focus {
+      box-shadow: 0 0 0 6px rgba(105, 190, 200, 0.16);
+      transform: translateY(-1px);
+    }
+
+    .mode-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .mode-label {
+      color: #667085;
+      font-weight: 900;
+      margin-right: 2px;
+    }
+
+    .mode-button {
+      border: 1px solid #d7e4ee;
+      background: #fff;
+      color: #526071;
+      border-radius: 999px;
+      padding: 11px 14px;
+      font-weight: 900;
+      box-shadow: 0 8px 18px rgba(17, 24, 39, 0.04);
+      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease, color 160ms ease;
+    }
+
+    .mode-button:hover {
+      transform: translateY(-2px);
+      border-color: #aacfd5;
+    }
+
+    .mode-button.is-active {
+      color: #123842;
+      background: var(--primary-soft);
+      border-color: var(--primary);
+      box-shadow: 0 10px 24px rgba(105, 190, 200, 0.18);
+    }
+
+    .toolbar {
+      margin: 36px 4px 16px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: end;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .section-title {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: baseline;
+    }
+
+    .section-title h2 {
+      margin: 0;
+      font-size: clamp(1.35rem, 3vw, 2rem);
+      letter-spacing: -0.055em;
+    }
+
+    .section-title p {
+      margin: 0;
+      color: var(--muted);
+      font-weight: 850;
+    }
+
+    .result-meta {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .meta-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 13px;
+      border-radius: 999px;
+      border: 1px solid #dbe7f0;
+      background: rgba(255, 255, 255, 0.78);
+      color: #667085;
+      font-weight: 900;
+    }
+
+    .category-panel {
+      background: rgba(255, 255, 255, 0.75);
+      border: 1px solid rgba(230, 237, 244, 0.95);
+      border-radius: var(--radius-xl);
+      padding: 18px;
+      box-shadow: 0 14px 36px rgba(17, 24, 39, 0.04);
+    }
+
+    .category-chips {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .chip {
+      min-height: 74px;
+      border: 1px solid #e2eaf2;
+      background: #fff;
+      color: #111827;
+      border-radius: 22px;
+      padding: 12px 13px;
+      box-shadow: 0 9px 20px rgba(17, 24, 39, 0.04);
+      transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease, background 160ms ease;
+    }
+
+    .chip:hover {
+      transform: translateY(-2px);
+      border-color: #c7d8e6;
+      box-shadow: 0 14px 28px rgba(17, 24, 39, 0.07);
+    }
+
+    .chip.is-active {
+      background: linear-gradient(180deg, #f0fbfc, #ffffff);
+      border-color: var(--primary);
+      box-shadow: 0 16px 34px rgba(105, 190, 200, 0.18);
+    }
+
+    .chip-main {
+      display: block;
+      font-size: clamp(1.08rem, 2.3vw, 1.38rem);
+      font-weight: 950;
+      letter-spacing: -0.045em;
+      color: #111827;
+    }
+
+    .chip-sub {
+      display: block;
+      margin-top: 3px;
+      color: #6b7280;
+      font-weight: 900;
+    }
+
+    .groups {
+      margin-top: 22px;
+      display: grid;
+      gap: 22px;
+    }
+
+    .category-group {
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(230, 237, 244, 0.95);
+      border-radius: var(--radius-xl);
+      padding: 20px;
+      box-shadow: 0 14px 36px rgba(17, 24, 39, 0.04);
+    }
+
+    .group-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #e4ebf2;
+    }
+
+    .group-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0;
+      font-size: clamp(1.17rem, 2.8vw, 1.6rem);
+      letter-spacing: -0.055em;
+    }
+
+    .group-icon {
+      display: inline-grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      background: var(--primary-soft);
+      border: 1px solid #d2eff2;
+      font-size: 1.35rem;
+    }
+
+    .group-count {
+      color: #6b7280;
+      font-weight: 900;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .product-card {
+      position: relative;
+      min-height: 232px;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 12px;
+      border: 1px solid #e0e9f1;
+      background: #fff;
+      border-radius: 26px;
+      padding: 15px;
+      text-align: left;
+      box-shadow: var(--card-shadow);
+      overflow: hidden;
+      transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+    }
+
+    .product-card::after {
+      content: "";
+      position: absolute;
+      inset: auto 16px 0;
+      height: 3px;
+      border-radius: 999px 999px 0 0;
+      background: linear-gradient(90deg, transparent, rgba(105, 190, 200, 0.8), transparent);
+      opacity: 0;
+      transition: opacity 180ms ease;
+    }
+
+    .product-card:hover {
+      transform: translateY(-4px);
+      border-color: #afd7de;
+      box-shadow: 0 20px 40px rgba(17, 24, 39, 0.09);
+    }
+
+    .product-card:hover::after {
+      opacity: 1;
+    }
+
+    .photo {
+      position: relative;
+      display: grid;
+      place-items: center;
+      height: 118px;
+      border-radius: 22px;
+      background:
+        radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.75), transparent 28%),
+        linear-gradient(135deg, rgba(105, 190, 200, 0.28), rgba(41, 70, 163, 0.09));
+      border: 1px solid rgba(105, 190, 200, 0.28);
+      overflow: hidden;
+    }
+
+    .photo::before {
+      content: "";
+      position: absolute;
+      width: 84px;
+      height: 84px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.38);
+      right: -20px;
+      bottom: -18px;
+    }
+
+    .photo span {
+      position: relative;
+      z-index: 1;
+      font-size: 3.8rem;
+      filter: drop-shadow(0 14px 18px rgba(17, 24, 39, 0.12));
+    }
+
+
+    .photo img,
+    .detail-photo img {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 16px;
+      filter: drop-shadow(0 14px 18px rgba(17, 24, 39, 0.10));
+    }
+
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .card-text {
+      min-width: 0;
+    }
+
+    .category-tag {
+      display: inline-flex;
+      width: fit-content;
+      margin-bottom: 7px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: #f3f7fb;
+      color: #667085;
+      border: 1px solid #e4ebf2;
+      font-weight: 900;
+      font-size: 0.78rem;
+    }
+
+    .product-name {
+      margin: 0;
+      color: #111827;
+      font-size: 1.13rem;
+      line-height: 1.25;
+      letter-spacing: -0.04em;
+      font-weight: 950;
+    }
+
+    .product-desc {
+      margin: 7px 0 0;
+      color: #737d8c;
+      line-height: 1.45;
+      font-size: 0.91rem;
+      font-weight: 700;
+    }
+
+    .score-badge {
+      flex: 0 0 auto;
+      min-width: 62px;
+      display: grid;
+      place-items: center;
+      padding: 8px 9px;
+      border-radius: 18px;
+      background: #101828;
+      color: white;
+      box-shadow: 0 10px 22px rgba(16, 24, 40, 0.14);
+    }
+
+    .score-badge strong {
+      line-height: 1;
+      font-size: 1.08rem;
+    }
+
+    .score-badge small {
+      margin-top: 3px;
+      color: #cbd5e1;
+      font-weight: 900;
+      font-size: 0.72rem;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .small-tag {
+      padding: 5px 8px;
+      background: var(--primary-soft);
+      color: #337d88;
+      border: 1px solid #d3eef2;
+      border-radius: 999px;
+      font-weight: 900;
+      font-size: 0.75rem;
+    }
+
+    .empty-state {
+      padding: 42px 18px;
+      border: 1px dashed #cbd8e4;
+      background: rgba(255,255,255,0.7);
+      border-radius: 26px;
+      text-align: center;
+      color: #667085;
+      font-weight: 900;
+    }
+
+    .search-page,
+    .detail-page {
+      display: none;
+    }
+
+    .search-page.is-open,
+    .detail-page.is-open {
+      display: block;
+    }
+
+    .main-page.is-hidden {
+      display: none;
+    }
+
+    .search-summary-card {
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(230, 237, 244, 0.95);
+      border-radius: var(--radius-xl);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 22px;
+    }
+
+    .search-summary-card h1 {
+      font-size: clamp(1.85rem, 4.5vw, 3.4rem);
+      margin-bottom: 12px;
+    }
+
+    .search-summary-card p {
+      margin: 0;
+      color: #667085;
+      font-size: 1.04rem;
+      line-height: 1.6;
+      font-weight: 800;
+    }
+
+    .search-category-note {
+      margin: 10px 0 0;
+      color: #337d88;
+      font-weight: 950;
+    }
+
+    .back-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin: 4px 0 18px;
+    }
+
+    .back-btn {
+      border: 1px solid #dbe7f0;
+      background: #ffffff;
+      color: #101828;
+      border-radius: 999px;
+      padding: 12px 17px;
+      font-weight: 950;
+      box-shadow: 0 10px 22px rgba(17, 24, 39, 0.05);
+      transition: transform 160ms ease, border-color 160ms ease;
+    }
+
+    .back-btn:hover {
+      transform: translateY(-2px);
+      border-color: var(--primary);
+    }
+
+    .detail-shell {
+      display: grid;
+      grid-template-columns: minmax(280px, 0.92fr) minmax(320px, 1.08fr);
+      gap: 22px;
+      align-items: start;
+    }
+
+    .detail-card {
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid #e3ebf2;
+      border-radius: 34px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .detail-visual {
+      text-align: center;
+    }
+
+    .detail-photo {
+      height: 320px;
+      border-radius: 30px;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at 28% 24%, rgba(255,255,255,0.85), transparent 25%),
+        radial-gradient(circle at 80% 82%, rgba(105, 190, 200, 0.24), transparent 28%),
+        linear-gradient(135deg, rgba(105, 190, 200, 0.24), rgba(41, 70, 163, 0.10));
+      border: 1px solid rgba(105, 190, 200, 0.28);
+      overflow: hidden;
+    }
+
+    .detail-photo span {
+      font-size: 8.6rem;
+      filter: drop-shadow(0 24px 26px rgba(17, 24, 39, 0.16));
+    }
+
+    .detail-title {
+      margin: 20px 0 6px;
+      font-size: clamp(1.7rem, 4vw, 2.7rem);
+      line-height: 1.12;
+      letter-spacing: -0.07em;
+    }
+
+    .detail-subtitle {
+      margin: 0 auto 14px;
+      color: #667085;
+      font-weight: 850;
+      line-height: 1.55;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 18px;
+      text-align: left;
+    }
+
+    .info-item {
+      padding: 14px;
+      border: 1px solid #e4ebf2;
+      background: #fff;
+      border-radius: 18px;
+    }
+
+    .info-item span {
+      display: block;
+      color: #7a8597;
+      font-weight: 900;
+      font-size: 0.82rem;
+      margin-bottom: 4px;
+    }
+
+    .info-item strong {
+      color: #111827;
+      font-weight: 950;
+      letter-spacing: -0.03em;
+    }
+
+    .score-panel {
+      display: grid;
+      gap: 16px;
+    }
+
+    .panel-head {
+      display: flex;
+      gap: 14px;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #e4ebf2;
+    }
+
+    .panel-head h2 {
+      margin: 0;
+      font-size: clamp(1.45rem, 3vw, 2.1rem);
+      letter-spacing: -0.06em;
+    }
+
+    .panel-head p {
+      margin: 7px 0 0;
+      color: #667085;
+      font-weight: 800;
+      line-height: 1.5;
+    }
+
+    .total-score {
+      flex: 0 0 auto;
+      width: 132px;
+      height: 132px;
+      display: grid;
+      place-items: center;
+      border-radius: 34px;
+      background: linear-gradient(180deg, #111827, #23314a);
+      color: white;
+      box-shadow: 0 24px 42px rgba(17, 24, 39, 0.18);
+    }
+
+    .total-score strong {
+      display: block;
+      text-align: center;
+      font-size: 2.05rem;
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+
+    .total-score span {
+      display: block;
+      margin-top: 7px;
+      color: #cbd5e1;
+      text-align: center;
+      font-weight: 950;
+    }
+
+    .select-row {
+      display: grid;
+      gap: 10px;
+      padding: 15px;
+      border: 1px solid #e3ebf2;
+      border-radius: 24px;
+      background: #fff;
+    }
+
+    .select-row label {
+      color: #667085;
+      font-weight: 950;
+    }
+
+    .mode-select {
+      width: 100%;
+      min-height: 52px;
+      border: 2px solid #dce8ef;
+      border-radius: 17px;
+      padding: 0 14px;
+      color: #111827;
+      background: #fff;
+      outline: none;
+      font-weight: 950;
+    }
+
+    .mode-select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 5px rgba(105, 190, 200, 0.14);
+    }
+
+    .weight-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .weight-pill {
+      padding: 7px 10px;
+      border-radius: 999px;
+      color: #336f79;
+      background: var(--primary-soft);
+      border: 1px solid #cbeef2;
+      font-weight: 950;
+      font-size: 0.83rem;
+    }
+
+    .score-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .score-row {
+      display: grid;
+      grid-template-columns: 110px minmax(130px, 1fr) 56px;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      background: #fff;
+      border: 1px solid #e4ebf2;
+      border-radius: 20px;
+    }
+
+    .score-row-name {
+      color: #111827;
+      font-weight: 950;
+      letter-spacing: -0.04em;
+    }
+
+    .star-line {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .star-box {
+      position: relative;
+      display: inline-block;
+      font-size: 1.15rem;
+      line-height: 1;
+      letter-spacing: 0.07em;
+      color: #d5dde7;
+      white-space: nowrap;
+    }
+
+    .star-fill {
+      position: absolute;
+      inset: 0 auto 0 0;
+      overflow: hidden;
+      color: var(--yellow);
+      white-space: nowrap;
+    }
+
+    .bar {
+      height: 8px;
+      flex: 1;
+      min-width: 70px;
+      background: #eef3f7;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .bar span {
+      display: block;
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--blue));
+      border-radius: inherit;
+    }
+
+    .row-score {
+      text-align: right;
+      color: #111827;
+      font-weight: 950;
+    }
+
+    .mode-note {
+      padding: 15px;
+      border-radius: 22px;
+      background: #f7fbfd;
+      border: 1px solid #e3ebf2;
+      color: #657083;
+      font-weight: 820;
+      line-height: 1.55;
+    }
+
+    .footer-note {
+      margin: 26px 4px 0;
+      padding: 18px 20px;
+      border: 1px solid #e1eaf2;
+      background: rgba(255, 255, 255, 0.72);
+      border-radius: 24px;
+      color: #667085;
+      font-weight: 820;
+      line-height: 1.55;
+    }
+
+    .footer-note strong {
+      color: #111827;
+    }
+
+    @media (max-width: 980px) {
+      .category-chips {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .product-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .detail-shell {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 680px) {
+      .app {
+        padding: 14px 12px 42px;
+      }
+
+      .hero {
+        border-radius: 26px;
+        padding: 22px 14px 26px;
+      }
+
+      .search-field {
+        height: 62px;
+        border-radius: 18px;
+      }
+
+      .category-panel,
+      .category-group,
+      .detail-card {
+        border-radius: 24px;
+        padding: 15px;
+      }
+
+      .category-chips {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .chip {
+        min-height: 66px;
+        border-radius: 18px;
+      }
+
+      .product-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .panel-head {
+        display: grid;
+      }
+
+      .total-score {
+        width: 100%;
+        height: auto;
+        min-height: 108px;
+        border-radius: 24px;
+      }
+
+      .detail-photo {
+        height: 240px;
+      }
+
+      .detail-photo span {
+        font-size: 6.5rem;
+      }
+
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .score-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .row-score {
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section id="mainPage" class="main-page">
+      <header class="hero">
+        <div class="hero-inner">
+          <svg class="mascot" viewBox="0 0 220 160" role="img" aria-label="상품을 안내하는 작은 마스코트">
+            <path d="M59 61c-12-2-18-10-13-20 4-8 13-7 18-2 0-16 20-21 29-9 7-7 20-5 25 5 7 13-4 29-20 26H59z" fill="#fff" stroke="#2946a3" stroke-width="4" stroke-linecap="round"/>
+            <path d="M151 99c-9-1-14-8-10-15 3-6 10-6 14-2 0-12 15-16 22-7 6-5 15-4 19 4 5 10-3 21-15 20h-30z" fill="#fff" stroke="#2946a3" stroke-width="4" stroke-linecap="round"/>
+            <path d="M81 112c-10-1-15-9-11-17 3-7 12-7 16-2 0-13 17-18 24-8 6-6 17-4 21 4 6 11-3 24-17 23H81z" fill="#fff" stroke="#2946a3" stroke-width="4" stroke-linecap="round"/>
+            <path d="M99 48c21-14 56-8 72 15 17 24 9 55-19 68-27 13-65 5-82-18-17-24-7-51 29-65z" fill="#dff9fb" stroke="#2946a3" stroke-width="4" stroke-linejoin="round"/>
+            <path d="M72 80c-21-8-33-2-38 7 17-1 28 5 37 16" fill="#dff9fb" stroke="#2946a3" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M164 75c15-7 28-4 36 6-14 1-23 7-30 17" fill="#dff9fb" stroke="#2946a3" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+            <ellipse cx="122" cy="45" rx="18" ry="13" fill="#69bec8" stroke="#2946a3" stroke-width="4" transform="rotate(-22 122 45)"/>
+            <ellipse cx="146" cy="47" rx="13" ry="18" fill="#80d2d7" stroke="#2946a3" stroke-width="4" transform="rotate(14 146 47)"/>
+            <circle cx="105" cy="80" r="5" fill="#2946a3"/>
+            <path d="M142 76c6 5 15 5 21 0" fill="none" stroke="#2946a3" stroke-width="4" stroke-linecap="round"/>
+            <path d="M116 104c7 6 17 7 25 1" fill="none" stroke="#2946a3" stroke-width="4" stroke-linecap="round"/>
+            <path d="M91 68c-4 3-8 3-12 0" stroke="#2946a3" stroke-width="4" stroke-linecap="round"/>
+          </svg>
+          <p class="eyebrow">성과발표용 소비 점수 데모</p>
+          <h1>스마트 소비 상품관</h1>
+          <p class="subtitle">
+            상품을 검색하거나 <strong>카테고리</strong>를 눌러 살펴보세요. 상품 카드를 누르면 기본 정보와 5가지 소비 점수, 모드별 가중 총점이 표시됩니다.
+          </p>
+
+          <div class="search-wrap">
+            <form id="searchForm" class="search-form" autocomplete="off">
+              <input id="searchInput" class="search-field" type="search" placeholder="상품명 또는 카테고리 검색 (예: 생수 · 프로틴바 · 그래놀라 · 커피)" />
+              <button class="search-submit" type="submit">검색</button>
+            </form>
+          </div>
+
+          <div id="mainModeButtons" class="mode-bar" aria-label="소비 점수 모드 선택">
+            <span class="mode-label">총점 기준</span>
+          </div>
+        </div>
+      </header>
+
+      <div class="toolbar">
+        <div class="section-title">
+          <h2>카테고리별 찾기</h2>
+          <p>15개 주요 식료품 카테고리별 SalesRank 상위 10개 상품, 총 150개</p>
+        </div>
+        <div class="result-meta">
+          <span id="resultCount" class="meta-pill">상품 150개</span>
+          <span id="activeFilter" class="meta-pill">전체 보기</span>
+        </div>
+      </div>
+
+      <section class="category-panel" aria-label="카테고리 목록">
+        <div id="categoryChips" class="category-chips"></div>
+      </section>
+
+      <section id="groups" class="groups" aria-live="polite"></section>
+
+      <p class="footer-note">
+        <strong>데이터 안내:</strong> 이 페이지는 CSV에 정리된 실제 Amazon 식료품 상품명과 category별 SalesRank 순위 기반 발표용 데이터셋을 사용합니다. 단, 이미지 URL과 실시간 SalesRank는 PA-API로 재검증해야 합니다. 데이터 출처를 흐리면 발표가 아니라 마술쇼가 됩니다.
+      </p>
+    </section>
+
+    <section id="searchPage" class="search-page" aria-live="polite">
+      <div class="back-row">
+        <button class="back-btn" type="button" onclick="goHome()">← 상품 목록으로</button>
+      </div>
+
+      <article class="search-summary-card">
+        <p class="eyebrow">검색 결과 추천</p>
+        <h1 id="searchTitle">검색 결과</h1>
+        <p id="searchDescription">검색어와 연결된 카테고리에서 현재 선택한 기준의 상위 3개 상품을 보여줍니다.</p>
+        <div id="searchModeButtons" class="mode-bar" aria-label="검색 결과 점수 기준 선택"></div>
+      </article>
+
+      <section id="searchContent" class="groups" aria-live="polite"></section>
+    </section>
+
+    <section id="detailPage" class="detail-page" aria-live="polite">
+      <div class="back-row">
+        <button class="back-btn" type="button" onclick="goHome()">← 상품 목록으로</button>
+      </div>
+      <div id="detailContent" class="detail-shell"></div>
+    </section>
+  </main>
+
+  <script>
+    const scoreKeys = [
+      { key: "health", label: "건강성" },
+      { key: "value", label: "가성비" },
+      { key: "environment", label: "환경성" },
+      { key: "welfare", label: "동물복지" },
+      { key: "social", label: "사회적 책임" }
+    ];
+
+    const modes = {
+      health: {
+        label: "건강 모드",
+        desc: "영양 균형, 안전성, 저당·저나트륨 같은 건강 요소를 가장 크게 반영합니다.",
+        weights: { health: 0.45, value: 0.15, environment: 0.15, welfare: 0.10, social: 0.15 }
+      },
+      eco: {
+        label: "친환경 모드",
+        desc: "포장재, 재활용성, 탄소 배출 저감 등 환경 요소를 가장 크게 반영합니다.",
+        weights: { health: 0.15, value: 0.10, environment: 0.45, welfare: 0.15, social: 0.15 }
+      },
+      saving: {
+        label: "절약 모드",
+        desc: "가격 대비 용량과 실사용 효율을 가장 크게 반영합니다.",
+        weights: { health: 0.15, value: 0.50, environment: 0.10, welfare: 0.10, social: 0.15 }
+      },
+      family: {
+        label: "가족 모드",
+        desc: "가족 단위 소비에 맞춰 건강성과 가성비를 균형 있게 크게 반영합니다.",
+        weights: { health: 0.35, value: 0.25, environment: 0.15, welfare: 0.10, social: 0.15 }
+      },
+      ethical: {
+        label: "윤리 소비 모드",
+        desc: "환경성, 동물복지, 사회적 책임을 중심으로 반영합니다.",
+        weights: { health: 0.10, value: 0.10, environment: 0.30, welfare: 0.25, social: 0.25 }
+      }
+    };
+
+    const categoryIcons = {
+      "생수": "💧",
+      "탄산수/기능성 음료": "🫧",
+      "에너지 드링크": "⚡",
+      "프로틴 음료": "🥤",
+      "커피 캡슐/K컵": "☕",
+      "차/허브티": "🍵",
+      "파스타/면류": "🍝",
+      "시리얼/오트/그래놀라": "🥣",
+      "프로틴바/스낵바": "🍫",
+      "칩/팝콘/크래커": "🍿",
+      "초콜릿/캔디": "🍬",
+      "견과/씨앗/건과일": "🥜",
+      "스프레드/잼/너트버터": "🥜",
+      "소스/조미료": "🧂",
+      "베이킹/곡물": "🌾"
+};
+
+    const products = [
+      {
+            "id": "amazon-001",
+            "category": "생수",
+            "rank": 1,
+            "name": "Liquid Death Mountain Water",
+            "brand": "Liquid Death",
+            "price": "SalesRank #1",
+            "capacity": "생수 카테고리 1위",
+            "image": "💧",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Liquid+Death+Mountain+Water",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 1",
+                  "Liquid Death",
+                  "생수"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.4,
+                  "value": 3.9,
+                  "environment": 3.4,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-002",
+            "category": "생수",
+            "rank": 2,
+            "name": "FIJI Natural Artesian Water",
+            "brand": "FIJI",
+            "price": "SalesRank #2",
+            "capacity": "생수 카테고리 2위",
+            "image": "💧",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=FIJI+Natural+Artesian+Water",
+            "desc": "건강/웰니스 키워드 반영",
+            "tags": [
+                  "Rank 2",
+                  "FIJI",
+                  "생수"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.8,
+                  "value": 3.6,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-003",
+            "category": "생수",
+            "rank": 3,
+            "name": "Essentia Ionized Alkaline Water",
+            "brand": "Essentia",
+            "price": "SalesRank #3",
+            "capacity": "생수 카테고리 3위",
+            "image": "💧",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Essentia+Ionized+Alkaline+Water",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 3",
+                  "Essentia",
+                  "생수"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.4,
+                  "value": 3.7,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-004",
+            "category": "생수",
+            "rank": 4,
+            "name": "evian Natural Spring Water",
+            "brand": "evian",
+            "price": "SalesRank #4",
+            "capacity": "생수 카테고리 4위",
+            "image": "💧",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=evian+Natural+Spring+Water",
+            "desc": "건강/웰니스 키워드 반영",
+            "tags": [
+                  "Rank 4",
+                  "evian",
+                  "생수"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.8,
+                  "value": 3.4,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-005",
+            "category": "생수",
+            "rank": 5,
+            "name": "smartwater Vapor Distilled Premium Water",
+            "brand": "smartwater",
+            "price": "SalesRank #5",
+            "capacity": "생수 카테고리 5위",
+            "image": "💧",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=smartwater+Vapor+Distilled+Premium+Water",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 5",
+                  "smartwater",
+                  "생수"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.4,
+                  "value": 3.3,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-006",
+            "category": "생수",
+            "rank": 6,
+            "name": "Poland Spring Natural Spring Water",
+            "brand": "Poland Spring",
+            "price": "SalesRank #6",
+            "capacity": "생수 카테고리 6위",
+            "image": "💧",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Poland+Spring+Natural+Spring+Water",
+            "desc": "건강/웰니스 키워드 반영",
+            "tags": [
+                  "Rank 6",
+                  "Poland Spring",
+                  "생수"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.8,
+                  "value": 3.4,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-007",
+            "category": "생수",
+            "rank": 7,
+            "name": "Mountain Valley Spring Water",
+            "brand": "Mountain Valley",
+            "price": "SalesRank #7",
+            "capacity": "생수 카테고리 7위",
+            "image": "💧",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Mountain+Valley+Spring+Water",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 7",
+                  "Mountain Valley",
+                  "생수"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.4,
+                  "value": 3.4,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-008",
+            "category": "생수",
+            "rank": 8,
+            "name": "Acqua Panna Natural Spring Water",
+            "brand": "Acqua Panna",
+            "price": "SalesRank #8",
+            "capacity": "생수 카테고리 8위",
+            "image": "💧",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Acqua+Panna+Natural+Spring+Water",
+            "desc": "건강/웰니스 키워드 반영",
+            "tags": [
+                  "Rank 8",
+                  "Acqua Panna",
+                  "생수"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.8,
+                  "value": 3.4,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-009",
+            "category": "생수",
+            "rank": 9,
+            "name": "Core Hydration Nutrient Enhanced Water",
+            "brand": "Core Hydration",
+            "price": "SalesRank #9",
+            "capacity": "생수 카테고리 9위",
+            "image": "💧",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Core+Hydration+Nutrient+Enhanced+Water",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 9",
+                  "Core Hydration",
+                  "생수"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.4,
+                  "value": 3.4,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-010",
+            "category": "생수",
+            "rank": 10,
+            "name": "VOSS Still Water",
+            "brand": "VOSS",
+            "price": "SalesRank #10",
+            "capacity": "생수 카테고리 10위",
+            "image": "💧",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=VOSS+Still+Water",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 10",
+                  "VOSS",
+                  "생수"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.4,
+                  "value": 3.2,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-011",
+            "category": "탄산수/기능성 음료",
+            "rank": 1,
+            "name": "Sparkling Ice Black Raspberry Sparkling Water",
+            "brand": "Sparkling Ice",
+            "price": "SalesRank #1",
+            "capacity": "탄산수/기능성 음료 카테고리 1위",
+            "image": "🫧",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Sparkling+Ice+Black+Raspberry+Sparkling+Water",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 1",
+                  "Sparkling Ice",
+                  "탄산수/기능성 음료"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.4,
+                  "value": 3.7,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-012",
+            "category": "탄산수/기능성 음료",
+            "rank": 2,
+            "name": "LaCroix Sparkling Water Variety Pack",
+            "brand": "LaCroix",
+            "price": "SalesRank #2",
+            "capacity": "탄산수/기능성 음료 카테고리 2위",
+            "image": "🫧",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=LaCroix+Sparkling+Water+Variety+Pack",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 2",
+                  "LaCroix",
+                  "탄산수/기능성 음료"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.4,
+                  "value": 3.6,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-013",
+            "category": "탄산수/기능성 음료",
+            "rank": 3,
+            "name": "Perrier Carbonated Mineral Water",
+            "brand": "Perrier",
+            "price": "SalesRank #3",
+            "capacity": "탄산수/기능성 음료 카테고리 3위",
+            "image": "🫧",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Perrier+Carbonated+Mineral+Water",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 3",
+                  "Perrier",
+                  "탄산수/기능성 음료"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.4,
+                  "value": 3.5,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-014",
+            "category": "탄산수/기능성 음료",
+            "rank": 4,
+            "name": "San Pellegrino Sparkling Natural Mineral Water",
+            "brand": "San Pellegrino",
+            "price": "SalesRank #4",
+            "capacity": "탄산수/기능성 음료 카테고리 4위",
+            "image": "🫧",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=San+Pellegrino+Sparkling+Natural+Mineral+Water",
+            "desc": "건강/웰니스 키워드 반영",
+            "tags": [
+                  "Rank 4",
+                  "San Pellegrino",
+                  "탄산수/기능성 음료"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.8,
+                  "value": 3.4,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-015",
+            "category": "탄산수/기능성 음료",
+            "rank": 5,
+            "name": "Waterloo Sparkling Water Variety Pack",
+            "brand": "Waterloo",
+            "price": "SalesRank #5",
+            "capacity": "탄산수/기능성 음료 카테고리 5위",
+            "image": "🫧",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Waterloo+Sparkling+Water+Variety+Pack",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 5",
+                  "Waterloo",
+                  "탄산수/기능성 음료"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.4,
+                  "value": 3.3,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-016",
+            "category": "탄산수/기능성 음료",
+            "rank": 6,
+            "name": "Spindrift Sparkling Water Variety Pack",
+            "brand": "Spindrift",
+            "price": "SalesRank #6",
+            "capacity": "탄산수/기능성 음료 카테고리 6위",
+            "image": "🫧",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Spindrift+Sparkling+Water+Variety+Pack",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 6",
+                  "Spindrift",
+                  "탄산수/기능성 음료"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.4,
+                  "value": 3.2,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-017",
+            "category": "탄산수/기능성 음료",
+            "rank": 7,
+            "name": "Topo Chico Mineral Water",
+            "brand": "Topo Chico",
+            "price": "SalesRank #7",
+            "capacity": "탄산수/기능성 음료 카테고리 7위",
+            "image": "🫧",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Topo+Chico+Mineral+Water",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 7",
+                  "Topo Chico",
+                  "탄산수/기능성 음료"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.4,
+                  "value": 3.2,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-018",
+            "category": "탄산수/기능성 음료",
+            "rank": 8,
+            "name": "Liquid Death Sparkling Water",
+            "brand": "Liquid Death",
+            "price": "SalesRank #8",
+            "capacity": "탄산수/기능성 음료 카테고리 8위",
+            "image": "🫧",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Liquid+Death+Sparkling+Water",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 8",
+                  "Liquid Death",
+                  "탄산수/기능성 음료"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.4,
+                  "value": 3.2,
+                  "environment": 3.4,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-019",
+            "category": "탄산수/기능성 음료",
+            "rank": 9,
+            "name": "bubly Sparkling Water Variety Pack",
+            "brand": "bubly",
+            "price": "SalesRank #9",
+            "capacity": "탄산수/기능성 음료 카테고리 9위",
+            "image": "🫧",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=bubly+Sparkling+Water+Variety+Pack",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 9",
+                  "bubly",
+                  "탄산수/기능성 음료"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.4,
+                  "value": 3.2,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-020",
+            "category": "탄산수/기능성 음료",
+            "rank": 10,
+            "name": "Polar Seltzer Water Variety Pack",
+            "brand": "Polar",
+            "price": "SalesRank #10",
+            "capacity": "탄산수/기능성 음료 카테고리 10위",
+            "image": "🫧",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Polar+Seltzer+Water+Variety+Pack",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 10",
+                  "Polar",
+                  "탄산수/기능성 음료"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.4,
+                  "value": 3.2,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-021",
+            "category": "에너지 드링크",
+            "rank": 1,
+            "name": "CELSIUS Assorted Flavors Official Variety Pack",
+            "brand": "CELSIUS",
+            "price": "SalesRank #1",
+            "capacity": "에너지 드링크 카테고리 1위",
+            "image": "⚡",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=CELSIUS+Assorted+Flavors+Official+Variety+Pack",
+            "desc": "가공식품/당류 가능성 감점",
+            "tags": [
+                  "Rank 1",
+                  "CELSIUS",
+                  "에너지 드링크"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.0,
+                  "value": 3.6,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-022",
+            "category": "에너지 드링크",
+            "rank": 2,
+            "name": "Monster Energy Zero Ultra Sugar Free Energy Drink",
+            "brand": "Monster",
+            "price": "SalesRank #2",
+            "capacity": "에너지 드링크 카테고리 2위",
+            "image": "⚡",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Monster+Energy+Zero+Ultra+Sugar+Free+Energy+Drink",
+            "desc": "가공식품/당류 가능성 감점",
+            "tags": [
+                  "Rank 2",
+                  "Monster",
+                  "에너지 드링크"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 2.6,
+                  "value": 3.5,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-023",
+            "category": "에너지 드링크",
+            "rank": 3,
+            "name": "Red Bull Energy Drink",
+            "brand": "Red Bull",
+            "price": "SalesRank #3",
+            "capacity": "에너지 드링크 카테고리 3위",
+            "image": "⚡",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Red+Bull+Energy+Drink",
+            "desc": "가공식품/당류 가능성 감점",
+            "tags": [
+                  "Rank 3",
+                  "Red Bull",
+                  "에너지 드링크"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 2.6,
+                  "value": 3.4,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-024",
+            "category": "에너지 드링크",
+            "rank": 4,
+            "name": "Alani Nu Cherry Slush Energy Drink",
+            "brand": "Alani Nu",
+            "price": "SalesRank #4",
+            "capacity": "에너지 드링크 카테고리 4위",
+            "image": "⚡",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Alani+Nu+Cherry+Slush+Energy+Drink",
+            "desc": "가공식품/당류 가능성 감점",
+            "tags": [
+                  "Rank 4",
+                  "Alani Nu",
+                  "에너지 드링크"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 2.6,
+                  "value": 3.3,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-025",
+            "category": "에너지 드링크",
+            "rank": 5,
+            "name": "Prime Energy Drink Variety Pack",
+            "brand": "PRIME",
+            "price": "SalesRank #5",
+            "capacity": "에너지 드링크 카테고리 5위",
+            "image": "⚡",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Prime+Energy+Drink+Variety+Pack",
+            "desc": "가공식품/당류 가능성 감점",
+            "tags": [
+                  "Rank 5",
+                  "PRIME",
+                  "에너지 드링크"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 2.6,
+                  "value": 3.2,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-026",
+            "category": "에너지 드링크",
+            "rank": 6,
+            "name": "Rockstar Energy Drink",
+            "brand": "Rockstar",
+            "price": "SalesRank #6",
+            "capacity": "에너지 드링크 카테고리 6위",
+            "image": "⚡",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Rockstar+Energy+Drink",
+            "desc": "가공식품/당류 가능성 감점",
+            "tags": [
+                  "Rank 6",
+                  "Rockstar",
+                  "에너지 드링크"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 2.6,
+                  "value": 3.1,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-027",
+            "category": "에너지 드링크",
+            "rank": 7,
+            "name": "V8 +Energy Drink",
+            "brand": "V8",
+            "price": "SalesRank #7",
+            "capacity": "에너지 드링크 카테고리 7위",
+            "image": "⚡",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=V8+%2BEnergy+Drink",
+            "desc": "가공식품/당류 가능성 감점",
+            "tags": [
+                  "Rank 7",
+                  "V8",
+                  "에너지 드링크"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 2.6,
+                  "value": 3.1,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-028",
+            "category": "에너지 드링크",
+            "rank": 8,
+            "name": "Bang Energy Drink",
+            "brand": "Bang",
+            "price": "SalesRank #8",
+            "capacity": "에너지 드링크 카테고리 8위",
+            "image": "⚡",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Bang+Energy+Drink",
+            "desc": "가공식품/당류 가능성 감점",
+            "tags": [
+                  "Rank 8",
+                  "Bang",
+                  "에너지 드링크"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 2.6,
+                  "value": 3.1,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-029",
+            "category": "에너지 드링크",
+            "rank": 9,
+            "name": "Guru Organic Energy Drink",
+            "brand": "Guru",
+            "price": "SalesRank #9",
+            "capacity": "에너지 드링크 카테고리 9위",
+            "image": "⚡",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Guru+Organic+Energy+Drink",
+            "desc": "건강/웰니스 키워드 반영; 환경/윤리 키워드 반영; 가공식품/당류 가능성 감점",
+            "tags": [
+                  "Rank 9",
+                  "Guru",
+                  "에너지 드링크"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.0,
+                  "value": 3.1,
+                  "environment": 3.4,
+                  "welfare": 3.6,
+                  "social": 3.4
+            }
+      },
+      {
+            "id": "amazon-030",
+            "category": "에너지 드링크",
+            "rank": 10,
+            "name": "ZOA Zero Sugar Energy Drink",
+            "brand": "ZOA",
+            "price": "SalesRank #10",
+            "capacity": "에너지 드링크 카테고리 10위",
+            "image": "⚡",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=ZOA+Zero+Sugar+Energy+Drink",
+            "desc": "건강/웰니스 키워드 반영; 가공식품/당류 가능성 감점",
+            "tags": [
+                  "Rank 10",
+                  "ZOA",
+                  "에너지 드링크"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 2.6,
+                  "value": 3.1,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-031",
+            "category": "프로틴 음료",
+            "rank": 1,
+            "name": "Premier Protein Shake Chocolate",
+            "brand": "Premier Protein",
+            "price": "SalesRank #1",
+            "capacity": "프로틴 음료 카테고리 1위",
+            "image": "🥤",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Premier+Protein+Shake+Chocolate",
+            "desc": "건강/웰니스 키워드 반영",
+            "tags": [
+                  "Rank 1",
+                  "Premier Protein",
+                  "프로틴 음료"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.0,
+                  "value": 3.6,
+                  "environment": 3.0,
+                  "welfare": 2.7,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-032",
+            "category": "프로틴 음료",
+            "rank": 2,
+            "name": "Core Power High Protein Milk Shake",
+            "brand": "Core Power",
+            "price": "SalesRank #2",
+            "capacity": "프로틴 음료 카테고리 2위",
+            "image": "🥤",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Core+Power+High+Protein+Milk+Shake",
+            "desc": "건강/웰니스 키워드 반영",
+            "tags": [
+                  "Rank 2",
+                  "Core Power",
+                  "프로틴 음료"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.4,
+                  "value": 3.5,
+                  "environment": 3.0,
+                  "welfare": 2.3,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-033",
+            "category": "프로틴 음료",
+            "rank": 3,
+            "name": "Fairlife Nutrition Plan High Protein Shake",
+            "brand": "fairlife",
+            "price": "SalesRank #3",
+            "capacity": "프로틴 음료 카테고리 3위",
+            "image": "🥤",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Fairlife+Nutrition+Plan+High+Protein+Shake",
+            "desc": "건강/웰니스 키워드 반영",
+            "tags": [
+                  "Rank 3",
+                  "fairlife",
+                  "프로틴 음료"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.4,
+                  "value": 3.4,
+                  "environment": 3.0,
+                  "welfare": 2.3,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-034",
+            "category": "프로틴 음료",
+            "rank": 4,
+            "name": "Muscle Milk Pro Series Protein Shake",
+            "brand": "Muscle Milk",
+            "price": "SalesRank #4",
+            "capacity": "프로틴 음료 카테고리 4위",
+            "image": "🥤",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Muscle+Milk+Pro+Series+Protein+Shake",
+            "desc": "건강/웰니스 키워드 반영",
+            "tags": [
+                  "Rank 4",
+                  "Muscle Milk",
+                  "프로틴 음료"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.4,
+                  "value": 3.3,
+                  "environment": 3.0,
+                  "welfare": 2.3,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-035",
+            "category": "프로틴 음료",
+            "rank": 5,
+            "name": "Ensure Max Protein Nutrition Shake",
+            "brand": "Ensure",
+            "price": "SalesRank #5",
+            "capacity": "프로틴 음료 카테고리 5위",
+            "image": "🥤",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Ensure+Max+Protein+Nutrition+Shake",
+            "desc": "건강/웰니스 키워드 반영",
+            "tags": [
+                  "Rank 5",
+                  "Ensure",
+                  "프로틴 음료"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.4,
+                  "value": 3.2,
+                  "environment": 3.0,
+                  "welfare": 2.6,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-036",
+            "category": "프로틴 음료",
+            "rank": 6,
+            "name": "Orgain Organic Nutrition Protein Shake",
+            "brand": "Orgain",
+            "price": "SalesRank #6",
+            "capacity": "프로틴 음료 카테고리 6위",
+            "image": "🥤",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Orgain+Organic+Nutrition+Protein+Shake",
+            "desc": "건강/웰니스 키워드 반영; 환경/윤리 키워드 반영",
+            "tags": [
+                  "Rank 6",
+                  "Orgain",
+                  "프로틴 음료"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.7,
+                  "value": 3.1,
+                  "environment": 3.4,
+                  "welfare": 3.3,
+                  "social": 3.4
+            }
+      },
+      {
+            "id": "amazon-037",
+            "category": "프로틴 음료",
+            "rank": 7,
+            "name": "OWYN Plant Based Protein Shake",
+            "brand": "OWYN",
+            "price": "SalesRank #7",
+            "capacity": "프로틴 음료 카테고리 7위",
+            "image": "🥤",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=OWYN+Plant+Based+Protein+Shake",
+            "desc": "건강/웰니스 키워드 반영; 환경/윤리 키워드 반영",
+            "tags": [
+                  "Rank 7",
+                  "OWYN",
+                  "프로틴 음료"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.7,
+                  "value": 3.1,
+                  "environment": 3.4,
+                  "welfare": 3.3,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-038",
+            "category": "프로틴 음료",
+            "rank": 8,
+            "name": "Atkins Protein-Rich Shake",
+            "brand": "Atkins",
+            "price": "SalesRank #8",
+            "capacity": "프로틴 음료 카테고리 8위",
+            "image": "🥤",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Atkins+Protein-Rich+Shake",
+            "desc": "건강/웰니스 키워드 반영",
+            "tags": [
+                  "Rank 8",
+                  "Atkins",
+                  "프로틴 음료"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.4,
+                  "value": 3.1,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-039",
+            "category": "프로틴 음료",
+            "rank": 9,
+            "name": "SlimFast Advanced Nutrition Shake",
+            "brand": "SlimFast",
+            "price": "SalesRank #9",
+            "capacity": "프로틴 음료 카테고리 9위",
+            "image": "🥤",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=SlimFast+Advanced+Nutrition+Shake",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 9",
+                  "SlimFast",
+                  "프로틴 음료"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.0,
+                  "value": 3.1,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-040",
+            "category": "프로틴 음료",
+            "rank": 10,
+            "name": "Soylent Complete Nutrition Shake",
+            "brand": "Soylent",
+            "price": "SalesRank #10",
+            "capacity": "프로틴 음료 카테고리 10위",
+            "image": "🥤",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Soylent+Complete+Nutrition+Shake",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 10",
+                  "Soylent",
+                  "프로틴 음료"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.0,
+                  "value": 3.1,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-041",
+            "category": "커피 캡슐/K컵",
+            "rank": 1,
+            "name": "Nespresso Capsules Vertuo Variety Pack",
+            "brand": "Nespresso",
+            "price": "SalesRank #1",
+            "capacity": "커피 캡슐/K컵 카테고리 1위",
+            "image": "☕",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Nespresso+Capsules+Vertuo+Variety+Pack",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 1",
+                  "Nespresso",
+                  "커피 캡슐/K컵"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.0,
+                  "value": 3.4,
+                  "environment": 2.6,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-042",
+            "category": "커피 캡슐/K컵",
+            "rank": 2,
+            "name": "Starbucks K-Cup Coffee Pods Pike Place Roast",
+            "brand": "Starbucks",
+            "price": "SalesRank #2",
+            "capacity": "커피 캡슐/K컵 카테고리 2위",
+            "image": "☕",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Starbucks+K-Cup+Coffee+Pods+Pike+Place+Roast",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 2",
+                  "Starbucks",
+                  "커피 캡슐/K컵"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.0,
+                  "value": 3.5,
+                  "environment": 2.3,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-043",
+            "category": "커피 캡슐/K컵",
+            "rank": 3,
+            "name": "Green Mountain Coffee Roasters Breakfast Blend K-Cup Pods",
+            "brand": "Green Mountain",
+            "price": "SalesRank #3",
+            "capacity": "커피 캡슐/K컵 카테고리 3위",
+            "image": "☕",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Green+Mountain+Coffee+Roasters+Breakfast+Blend+K-Cup+Pods",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 3",
+                  "Green Mountain",
+                  "커피 캡슐/K컵"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.0,
+                  "value": 3.4,
+                  "environment": 2.3,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-044",
+            "category": "커피 캡슐/K컵",
+            "rank": 4,
+            "name": "Dunkin' Original Blend Medium Roast K-Cup Pods",
+            "brand": "Dunkin'",
+            "price": "SalesRank #4",
+            "capacity": "커피 캡슐/K컵 카테고리 4위",
+            "image": "☕",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Dunkin%27+Original+Blend+Medium+Roast+K-Cup+Pods",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 4",
+                  "Dunkin'",
+                  "커피 캡슐/K컵"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.0,
+                  "value": 3.3,
+                  "environment": 2.3,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-045",
+            "category": "커피 캡슐/K컵",
+            "rank": 5,
+            "name": "The Original Donut Shop Regular K-Cup Pods",
+            "brand": "The Original Donut Shop",
+            "price": "SalesRank #5",
+            "capacity": "커피 캡슐/K컵 카테고리 5위",
+            "image": "☕",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=The+Original+Donut+Shop+Regular+K-Cup+Pods",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 5",
+                  "The Original Donut Shop",
+                  "커피 캡슐/K컵"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.0,
+                  "value": 3.2,
+                  "environment": 2.3,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-046",
+            "category": "커피 캡슐/K컵",
+            "rank": 6,
+            "name": "Peet's Coffee Major Dickason's Blend K-Cup Pods",
+            "brand": "Peet's Coffee",
+            "price": "SalesRank #6",
+            "capacity": "커피 캡슐/K컵 카테고리 6위",
+            "image": "☕",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Peet%27s+Coffee+Major+Dickason%27s+Blend+K-Cup+Pods",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 6",
+                  "Peet's Coffee",
+                  "커피 캡슐/K컵"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.0,
+                  "value": 3.1,
+                  "environment": 2.3,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-047",
+            "category": "커피 캡슐/K컵",
+            "rank": 7,
+            "name": "McCafe Premium Roast K-Cup Pods",
+            "brand": "McCafe",
+            "price": "SalesRank #7",
+            "capacity": "커피 캡슐/K컵 카테고리 7위",
+            "image": "☕",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=McCafe+Premium+Roast+K-Cup+Pods",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 7",
+                  "McCafe",
+                  "커피 캡슐/K컵"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.0,
+                  "value": 2.9,
+                  "environment": 2.3,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-048",
+            "category": "커피 캡슐/K컵",
+            "rank": 8,
+            "name": "Folgers Classic Roast K-Cup Pods",
+            "brand": "Folgers",
+            "price": "SalesRank #8",
+            "capacity": "커피 캡슐/K컵 카테고리 8위",
+            "image": "☕",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Folgers+Classic+Roast+K-Cup+Pods",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 8",
+                  "Folgers",
+                  "커피 캡슐/K컵"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.0,
+                  "value": 3.1,
+                  "environment": 2.3,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-049",
+            "category": "커피 캡슐/K컵",
+            "rank": 9,
+            "name": "Caribou Coffee Caribou Blend K-Cup Pods",
+            "brand": "Caribou Coffee",
+            "price": "SalesRank #9",
+            "capacity": "커피 캡슐/K컵 카테고리 9위",
+            "image": "☕",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Caribou+Coffee+Caribou+Blend+K-Cup+Pods",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 9",
+                  "Caribou Coffee",
+                  "커피 캡슐/K컵"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.0,
+                  "value": 3.1,
+                  "environment": 2.3,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-050",
+            "category": "커피 캡슐/K컵",
+            "rank": 10,
+            "name": "Lavazza Espresso Italiano K-Cup Pods",
+            "brand": "Lavazza",
+            "price": "SalesRank #10",
+            "capacity": "커피 캡슐/K컵 카테고리 10위",
+            "image": "☕",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Lavazza+Espresso+Italiano+K-Cup+Pods",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 10",
+                  "Lavazza",
+                  "커피 캡슐/K컵"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.0,
+                  "value": 3.1,
+                  "environment": 2.3,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-051",
+            "category": "차/허브티",
+            "rank": 1,
+            "name": "FGO Organic Hibiscus Tea Bags",
+            "brand": "FGO",
+            "price": "SalesRank #1",
+            "capacity": "차/허브티 카테고리 1위",
+            "image": "🍵",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=FGO+Organic+Hibiscus+Tea+Bags",
+            "desc": "건강/웰니스 키워드 반영; 환경/윤리 키워드 반영",
+            "tags": [
+                  "Rank 1",
+                  "FGO",
+                  "차/허브티"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 4.1,
+                  "value": 3.7,
+                  "environment": 3.4,
+                  "welfare": 3.6,
+                  "social": 3.4
+            }
+      },
+      {
+            "id": "amazon-052",
+            "category": "차/허브티",
+            "rank": 2,
+            "name": "Bigelow Green Tea Bags",
+            "brand": "Bigelow",
+            "price": "SalesRank #2",
+            "capacity": "차/허브티 카테고리 2위",
+            "image": "🍵",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Bigelow+Green+Tea+Bags",
+            "desc": "건강/웰니스 키워드 반영",
+            "tags": [
+                  "Rank 2",
+                  "Bigelow",
+                  "차/허브티"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.8,
+                  "value": 3.6,
+                  "environment": 3.0,
+                  "welfare": 3.6,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-053",
+            "category": "차/허브티",
+            "rank": 3,
+            "name": "Tazo Passion Herbal Tea",
+            "brand": "Tazo",
+            "price": "SalesRank #3",
+            "capacity": "차/허브티 카테고리 3위",
+            "image": "🍵",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Tazo+Passion+Herbal+Tea",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 3",
+                  "Tazo",
+                  "차/허브티"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.4,
+                  "value": 3.5,
+                  "environment": 3.0,
+                  "welfare": 3.6,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-054",
+            "category": "차/허브티",
+            "rank": 4,
+            "name": "Twinings Earl Grey Black Tea",
+            "brand": "Twinings",
+            "price": "SalesRank #4",
+            "capacity": "차/허브티 카테고리 4위",
+            "image": "🍵",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Twinings+Earl+Grey+Black+Tea",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 4",
+                  "Twinings",
+                  "차/허브티"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.4,
+                  "value": 3.4,
+                  "environment": 3.0,
+                  "welfare": 3.6,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-055",
+            "category": "차/허브티",
+            "rank": 5,
+            "name": "Harney & Sons Hot Cinnamon Spice Tea",
+            "brand": "Harney & Sons",
+            "price": "SalesRank #5",
+            "capacity": "차/허브티 카테고리 5위",
+            "image": "🍵",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Harney+%26+Sons+Hot+Cinnamon+Spice+Tea",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 5",
+                  "Harney & Sons",
+                  "차/허브티"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.4,
+                  "value": 3.3,
+                  "environment": 3.0,
+                  "welfare": 3.6,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-056",
+            "category": "차/허브티",
+            "rank": 6,
+            "name": "Yogi Green Tea Kombucha",
+            "brand": "Yogi",
+            "price": "SalesRank #6",
+            "capacity": "차/허브티 카테고리 6위",
+            "image": "🍵",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Yogi+Green+Tea+Kombucha",
+            "desc": "건강/웰니스 키워드 반영",
+            "tags": [
+                  "Rank 6",
+                  "Yogi",
+                  "차/허브티"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.8,
+                  "value": 3.2,
+                  "environment": 3.0,
+                  "welfare": 3.6,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-057",
+            "category": "차/허브티",
+            "rank": 7,
+            "name": "Traditional Medicinals Organic Throat Coat Tea",
+            "brand": "Traditional Medicinals",
+            "price": "SalesRank #7",
+            "capacity": "차/허브티 카테고리 7위",
+            "image": "🍵",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Traditional+Medicinals+Organic+Throat+Coat+Tea",
+            "desc": "건강/웰니스 키워드 반영; 환경/윤리 키워드 반영",
+            "tags": [
+                  "Rank 7",
+                  "Traditional Medicinals",
+                  "차/허브티"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 4.1,
+                  "value": 3.2,
+                  "environment": 3.4,
+                  "welfare": 3.6,
+                  "social": 3.7
+            }
+      },
+      {
+            "id": "amazon-058",
+            "category": "차/허브티",
+            "rank": 8,
+            "name": "Celestial Seasonings Sleepytime Herbal Tea",
+            "brand": "Celestial Seasonings",
+            "price": "SalesRank #8",
+            "capacity": "차/허브티 카테고리 8위",
+            "image": "🍵",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Celestial+Seasonings+Sleepytime+Herbal+Tea",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 8",
+                  "Celestial Seasonings",
+                  "차/허브티"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.4,
+                  "value": 3.2,
+                  "environment": 3.0,
+                  "welfare": 3.6,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-059",
+            "category": "차/허브티",
+            "rank": 9,
+            "name": "Lipton Black Tea Bags",
+            "brand": "Lipton",
+            "price": "SalesRank #9",
+            "capacity": "차/허브티 카테고리 9위",
+            "image": "🍵",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Lipton+Black+Tea+Bags",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 9",
+                  "Lipton",
+                  "차/허브티"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.4,
+                  "value": 3.2,
+                  "environment": 3.0,
+                  "welfare": 3.6,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-060",
+            "category": "차/허브티",
+            "rank": 10,
+            "name": "Numi Organic Jasmine Green Tea",
+            "brand": "Numi",
+            "price": "SalesRank #10",
+            "capacity": "차/허브티 카테고리 10위",
+            "image": "🍵",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Numi+Organic+Jasmine+Green+Tea",
+            "desc": "건강/웰니스 키워드 반영; 환경/윤리 키워드 반영",
+            "tags": [
+                  "Rank 10",
+                  "Numi",
+                  "차/허브티"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 4.1,
+                  "value": 3.2,
+                  "environment": 3.4,
+                  "welfare": 3.6,
+                  "social": 3.7
+            }
+      },
+      {
+            "id": "amazon-061",
+            "category": "파스타/면류",
+            "rank": 1,
+            "name": "Barilla Spaghetti Pasta",
+            "brand": "Barilla",
+            "price": "SalesRank #1",
+            "capacity": "파스타/면류 카테고리 1위",
+            "image": "🍝",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Barilla+Spaghetti+Pasta",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 1",
+                  "Barilla",
+                  "파스타/면류"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.0,
+                  "value": 3.9,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-062",
+            "category": "파스타/면류",
+            "rank": 2,
+            "name": "Barilla Penne Pasta",
+            "brand": "Barilla",
+            "price": "SalesRank #2",
+            "capacity": "파스타/면류 카테고리 2위",
+            "image": "🍝",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Barilla+Penne+Pasta",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 2",
+                  "Barilla",
+                  "파스타/면류"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.0,
+                  "value": 3.8,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-063",
+            "category": "파스타/면류",
+            "rank": 3,
+            "name": "De Cecco Spaghetti Pasta",
+            "brand": "De Cecco",
+            "price": "SalesRank #3",
+            "capacity": "파스타/면류 카테고리 3위",
+            "image": "🍝",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=De+Cecco+Spaghetti+Pasta",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 3",
+                  "De Cecco",
+                  "파스타/면류"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.0,
+                  "value": 3.7,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-064",
+            "category": "파스타/면류",
+            "rank": 4,
+            "name": "Rao's Homemade Pasta",
+            "brand": "Rao's",
+            "price": "SalesRank #4",
+            "capacity": "파스타/면류 카테고리 4위",
+            "image": "🍝",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Rao%27s+Homemade+Pasta",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 4",
+                  "Rao's",
+                  "파스타/면류"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.0,
+                  "value": 3.6,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-065",
+            "category": "파스타/면류",
+            "rank": 5,
+            "name": "Banza Chickpea Pasta",
+            "brand": "Banza",
+            "price": "SalesRank #5",
+            "capacity": "파스타/면류 카테고리 5위",
+            "image": "🍝",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Banza+Chickpea+Pasta",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 5",
+                  "Banza",
+                  "파스타/면류"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.0,
+                  "value": 3.5,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-066",
+            "category": "파스타/면류",
+            "rank": 6,
+            "name": "Lotus Foods Organic Millet & Brown Rice Ramen",
+            "brand": "Lotus Foods",
+            "price": "SalesRank #6",
+            "capacity": "파스타/면류 카테고리 6위",
+            "image": "🍝",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Lotus+Foods+Organic+Millet+%26+Brown+Rice+Ramen",
+            "desc": "건강/웰니스 키워드 반영; 환경/윤리 키워드 반영",
+            "tags": [
+                  "Rank 6",
+                  "Lotus Foods",
+                  "파스타/면류"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.4,
+                  "value": 3.4,
+                  "environment": 3.4,
+                  "welfare": 3.6,
+                  "social": 3.4
+            }
+      },
+      {
+            "id": "amazon-067",
+            "category": "파스타/면류",
+            "rank": 7,
+            "name": "Maruchan Ramen Chicken Flavor",
+            "brand": "Maruchan",
+            "price": "SalesRank #7",
+            "capacity": "파스타/면류 카테고리 7위",
+            "image": "🍝",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Maruchan+Ramen+Chicken+Flavor",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 7",
+                  "Maruchan",
+                  "파스타/면류"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 2.6,
+                  "value": 3.4,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-068",
+            "category": "파스타/면류",
+            "rank": 8,
+            "name": "Annie's Organic Macaroni & Cheese",
+            "brand": "Annie's",
+            "price": "SalesRank #8",
+            "capacity": "파스타/면류 카테고리 8위",
+            "image": "🍝",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Annie%27s+Organic+Macaroni+%26+Cheese",
+            "desc": "건강/웰니스 키워드 반영; 환경/윤리 키워드 반영",
+            "tags": [
+                  "Rank 8",
+                  "Annie's",
+                  "파스타/면류"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.0,
+                  "value": 3.4,
+                  "environment": 3.4,
+                  "welfare": 3.3,
+                  "social": 3.4
+            }
+      },
+      {
+            "id": "amazon-069",
+            "category": "파스타/면류",
+            "rank": 9,
+            "name": "Kraft Original Macaroni & Cheese Dinner",
+            "brand": "Kraft",
+            "price": "SalesRank #9",
+            "capacity": "파스타/면류 카테고리 9위",
+            "image": "🍝",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Kraft+Original+Macaroni+%26+Cheese+Dinner",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 9",
+                  "Kraft",
+                  "파스타/면류"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 2.6,
+                  "value": 3.4,
+                  "environment": 3.0,
+                  "welfare": 2.7,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-070",
+            "category": "파스타/면류",
+            "rank": 10,
+            "name": "Tinkyada Brown Rice Pasta",
+            "brand": "Tinkyada",
+            "price": "SalesRank #10",
+            "capacity": "파스타/면류 카테고리 10위",
+            "image": "🍝",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Tinkyada+Brown+Rice+Pasta",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 10",
+                  "Tinkyada",
+                  "파스타/면류"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.4,
+                  "value": 3.4,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-071",
+            "category": "시리얼/오트/그래놀라",
+            "rank": 1,
+            "name": "Quaker Instant Oatmeal Variety Pack",
+            "brand": "Quaker",
+            "price": "SalesRank #1",
+            "capacity": "시리얼/오트/그래놀라 카테고리 1위",
+            "image": "🥣",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Quaker+Instant+Oatmeal+Variety+Pack",
+            "desc": "건강/웰니스 키워드 반영",
+            "tags": [
+                  "Rank 1",
+                  "Quaker",
+                  "시리얼/오트/그래놀라"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.4,
+                  "value": 3.7,
+                  "environment": 3.0,
+                  "welfare": 3.6,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-072",
+            "category": "시리얼/오트/그래놀라",
+            "rank": 2,
+            "name": "Honey Nut Cheerios Cereal",
+            "brand": "Cheerios",
+            "price": "SalesRank #2",
+            "capacity": "시리얼/오트/그래놀라 카테고리 2위",
+            "image": "🥣",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Honey+Nut+Cheerios+Cereal",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 2",
+                  "Cheerios",
+                  "시리얼/오트/그래놀라"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.0,
+                  "value": 3.6,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-073",
+            "category": "시리얼/오트/그래놀라",
+            "rank": 3,
+            "name": "Cinnamon Toast Crunch Cereal",
+            "brand": "Cinnamon Toast Crunch",
+            "price": "SalesRank #3",
+            "capacity": "시리얼/오트/그래놀라 카테고리 3위",
+            "image": "🥣",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Cinnamon+Toast+Crunch+Cereal",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 3",
+                  "Cinnamon Toast Crunch",
+                  "시리얼/오트/그래놀라"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.0,
+                  "value": 3.5,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-074",
+            "category": "시리얼/오트/그래놀라",
+            "rank": 4,
+            "name": "Magic Spoon High Protein Cereal Variety Pack",
+            "brand": "Magic Spoon",
+            "price": "SalesRank #4",
+            "capacity": "시리얼/오트/그래놀라 카테고리 4위",
+            "image": "🥣",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Magic+Spoon+High+Protein+Cereal+Variety+Pack",
+            "desc": "건강/웰니스 키워드 반영",
+            "tags": [
+                  "Rank 4",
+                  "Magic Spoon",
+                  "시리얼/오트/그래놀라"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.4,
+                  "value": 3.4,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-075",
+            "category": "시리얼/오트/그래놀라",
+            "rank": 5,
+            "name": "KIND Healthy Grains Granola",
+            "brand": "KIND",
+            "price": "SalesRank #5",
+            "capacity": "시리얼/오트/그래놀라 카테고리 5위",
+            "image": "🥣",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=KIND+Healthy+Grains+Granola",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 5",
+                  "KIND",
+                  "시리얼/오트/그래놀라"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.0,
+                  "value": 3.3,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-076",
+            "category": "시리얼/오트/그래놀라",
+            "rank": 6,
+            "name": "Nature Valley Protein Granola",
+            "brand": "Nature Valley",
+            "price": "SalesRank #6",
+            "capacity": "시리얼/오트/그래놀라 카테고리 6위",
+            "image": "🥣",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Nature+Valley+Protein+Granola",
+            "desc": "건강/웰니스 키워드 반영",
+            "tags": [
+                  "Rank 6",
+                  "Nature Valley",
+                  "시리얼/오트/그래놀라"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.4,
+                  "value": 3.2,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-077",
+            "category": "시리얼/오트/그래놀라",
+            "rank": 7,
+            "name": "Seven Sundays Oat Protein Cereal",
+            "brand": "Seven Sundays",
+            "price": "SalesRank #7",
+            "capacity": "시리얼/오트/그래놀라 카테고리 7위",
+            "image": "🥣",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Seven+Sundays+Oat+Protein+Cereal",
+            "desc": "건강/웰니스 키워드 반영",
+            "tags": [
+                  "Rank 7",
+                  "Seven Sundays",
+                  "시리얼/오트/그래놀라"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.7,
+                  "value": 3.2,
+                  "environment": 3.0,
+                  "welfare": 3.6,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-078",
+            "category": "시리얼/오트/그래놀라",
+            "rank": 8,
+            "name": "Kellogg's Frosted Mini-Wheats Cereal",
+            "brand": "Kellogg's",
+            "price": "SalesRank #8",
+            "capacity": "시리얼/오트/그래놀라 카테고리 8위",
+            "image": "🥣",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Kellogg%27s+Frosted+Mini-Wheats+Cereal",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 8",
+                  "Kellogg's",
+                  "시리얼/오트/그래놀라"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.0,
+                  "value": 3.2,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-079",
+            "category": "시리얼/오트/그래놀라",
+            "rank": 9,
+            "name": "Bob's Red Mill Old Fashioned Rolled Oats",
+            "brand": "Bob's Red Mill",
+            "price": "SalesRank #9",
+            "capacity": "시리얼/오트/그래놀라 카테고리 9위",
+            "image": "🥣",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Bob%27s+Red+Mill+Old+Fashioned+Rolled+Oats",
+            "desc": "건강/웰니스 키워드 반영",
+            "tags": [
+                  "Rank 9",
+                  "Bob's Red Mill",
+                  "시리얼/오트/그래놀라"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.4,
+                  "value": 3.2,
+                  "environment": 3.0,
+                  "welfare": 3.6,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-080",
+            "category": "시리얼/오트/그래놀라",
+            "rank": 10,
+            "name": "Nature's Path Organic Flax Plus Cereal",
+            "brand": "Nature's Path",
+            "price": "SalesRank #10",
+            "capacity": "시리얼/오트/그래놀라 카테고리 10위",
+            "image": "🥣",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Nature%27s+Path+Organic+Flax+Plus+Cereal",
+            "desc": "건강/웰니스 키워드 반영; 환경/윤리 키워드 반영",
+            "tags": [
+                  "Rank 10",
+                  "Nature's Path",
+                  "시리얼/오트/그래놀라"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.4,
+                  "value": 3.2,
+                  "environment": 3.4,
+                  "welfare": 3.6,
+                  "social": 3.4
+            }
+      },
+      {
+            "id": "amazon-081",
+            "category": "프로틴바/스낵바",
+            "rank": 1,
+            "name": "KIND Bars Variety Pack",
+            "brand": "KIND",
+            "price": "SalesRank #1",
+            "capacity": "프로틴바/스낵바 카테고리 1위",
+            "image": "🍫",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=KIND+Bars+Variety+Pack",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 1",
+                  "KIND",
+                  "프로틴바/스낵바"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.0,
+                  "value": 3.7,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-082",
+            "category": "프로틴바/스낵바",
+            "rank": 2,
+            "name": "RXBAR Protein Bar Variety Pack",
+            "brand": "RXBAR",
+            "price": "SalesRank #2",
+            "capacity": "프로틴바/스낵바 카테고리 2위",
+            "image": "🍫",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=RXBAR+Protein+Bar+Variety+Pack",
+            "desc": "건강/웰니스 키워드 반영",
+            "tags": [
+                  "Rank 2",
+                  "RXBAR",
+                  "프로틴바/스낵바"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.4,
+                  "value": 3.6,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-083",
+            "category": "프로틴바/스낵바",
+            "rank": 3,
+            "name": "CLIF BAR Energy Bars Variety Pack",
+            "brand": "CLIF BAR",
+            "price": "SalesRank #3",
+            "capacity": "프로틴바/스낵바 카테고리 3위",
+            "image": "🍫",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=CLIF+BAR+Energy+Bars+Variety+Pack",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 3",
+                  "CLIF BAR",
+                  "프로틴바/스낵바"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.0,
+                  "value": 3.5,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-084",
+            "category": "프로틴바/스낵바",
+            "rank": 4,
+            "name": "Quest Nutrition Protein Bars Variety Pack",
+            "brand": "Quest",
+            "price": "SalesRank #4",
+            "capacity": "프로틴바/스낵바 카테고리 4위",
+            "image": "🍫",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Quest+Nutrition+Protein+Bars+Variety+Pack",
+            "desc": "건강/웰니스 키워드 반영",
+            "tags": [
+                  "Rank 4",
+                  "Quest",
+                  "프로틴바/스낵바"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.4,
+                  "value": 3.4,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-085",
+            "category": "프로틴바/스낵바",
+            "rank": 5,
+            "name": "Nature Valley Crunchy Granola Bars",
+            "brand": "Nature Valley",
+            "price": "SalesRank #5",
+            "capacity": "프로틴바/스낵바 카테고리 5위",
+            "image": "🍫",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Nature+Valley+Crunchy+Granola+Bars",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 5",
+                  "Nature Valley",
+                  "프로틴바/스낵바"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.0,
+                  "value": 3.3,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-086",
+            "category": "프로틴바/스낵바",
+            "rank": 6,
+            "name": "That's it Fruit Bars",
+            "brand": "That's it",
+            "price": "SalesRank #6",
+            "capacity": "프로틴바/스낵바 카테고리 6위",
+            "image": "🍫",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=That%27s+it+Fruit+Bars",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 6",
+                  "That's it",
+                  "프로틴바/스낵바"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.0,
+                  "value": 3.2,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-087",
+            "category": "프로틴바/스낵바",
+            "rank": 7,
+            "name": "LÄRABAR Fruit & Nut Bar Variety Pack",
+            "brand": "LÄRABAR",
+            "price": "SalesRank #7",
+            "capacity": "프로틴바/스낵바 카테고리 7위",
+            "image": "🍫",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=L%C3%84RABAR+Fruit+%26+Nut+Bar+Variety+Pack",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 7",
+                  "LÄRABAR",
+                  "프로틴바/스낵바"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.0,
+                  "value": 3.2,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-088",
+            "category": "프로틴바/스낵바",
+            "rank": 8,
+            "name": "ALOHA Organic Plant Based Protein Bars",
+            "brand": "ALOHA",
+            "price": "SalesRank #8",
+            "capacity": "프로틴바/스낵바 카테고리 8위",
+            "image": "🍫",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=ALOHA+Organic+Plant+Based+Protein+Bars",
+            "desc": "건강/웰니스 키워드 반영; 환경/윤리 키워드 반영",
+            "tags": [
+                  "Rank 8",
+                  "ALOHA",
+                  "프로틴바/스낵바"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 4.0,
+                  "value": 3.2,
+                  "environment": 3.8,
+                  "welfare": 3.6,
+                  "social": 3.4
+            }
+      },
+      {
+            "id": "amazon-089",
+            "category": "프로틴바/스낵바",
+            "rank": 9,
+            "name": "Fiber One 70 Calorie Chewy Bars",
+            "brand": "Fiber One",
+            "price": "SalesRank #9",
+            "capacity": "프로틴바/스낵바 카테고리 9위",
+            "image": "🍫",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Fiber+One+70+Calorie+Chewy+Bars",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 9",
+                  "Fiber One",
+                  "프로틴바/스낵바"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.0,
+                  "value": 3.2,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-090",
+            "category": "프로틴바/스낵바",
+            "rank": 10,
+            "name": "MadeGood Granola Minis",
+            "brand": "MadeGood",
+            "price": "SalesRank #10",
+            "capacity": "프로틴바/스낵바 카테고리 10위",
+            "image": "🍫",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=MadeGood+Granola+Minis",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 10",
+                  "MadeGood",
+                  "프로틴바/스낵바"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.0,
+                  "value": 3.2,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-091",
+            "category": "칩/팝콘/크래커",
+            "rank": 1,
+            "name": "SkinnyPop Original Popcorn",
+            "brand": "SkinnyPop",
+            "price": "SalesRank #1",
+            "capacity": "칩/팝콘/크래커 카테고리 1위",
+            "image": "🍿",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=SkinnyPop+Original+Popcorn",
+            "desc": "가공식품/당류 가능성 감점",
+            "tags": [
+                  "Rank 1",
+                  "SkinnyPop",
+                  "칩/팝콘/크래커"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 2.6,
+                  "value": 3.7,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-092",
+            "category": "칩/팝콘/크래커",
+            "rank": 2,
+            "name": "Pirate's Booty Aged White Cheddar Puffs",
+            "brand": "Pirate's Booty",
+            "price": "SalesRank #2",
+            "capacity": "칩/팝콘/크래커 카테고리 2위",
+            "image": "🍿",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Pirate%27s+Booty+Aged+White+Cheddar+Puffs",
+            "desc": "가공식품/당류 가능성 감점",
+            "tags": [
+                  "Rank 2",
+                  "Pirate's Booty",
+                  "칩/팝콘/크래커"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 2.6,
+                  "value": 3.6,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-093",
+            "category": "칩/팝콘/크래커",
+            "rank": 3,
+            "name": "Cheez-It Original Baked Snack Crackers",
+            "brand": "Cheez-It",
+            "price": "SalesRank #3",
+            "capacity": "칩/팝콘/크래커 카테고리 3위",
+            "image": "🍿",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Cheez-It+Original+Baked+Snack+Crackers",
+            "desc": "가공식품/당류 가능성 감점",
+            "tags": [
+                  "Rank 3",
+                  "Cheez-It",
+                  "칩/팝콘/크래커"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 2.6,
+                  "value": 3.5,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-094",
+            "category": "칩/팝콘/크래커",
+            "rank": 4,
+            "name": "Goldfish Cheddar Crackers",
+            "brand": "Goldfish",
+            "price": "SalesRank #4",
+            "capacity": "칩/팝콘/크래커 카테고리 4위",
+            "image": "🍿",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Goldfish+Cheddar+Crackers",
+            "desc": "가공식품/당류 가능성 감점",
+            "tags": [
+                  "Rank 4",
+                  "Goldfish",
+                  "칩/팝콘/크래커"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 2.6,
+                  "value": 3.4,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-095",
+            "category": "칩/팝콘/크래커",
+            "rank": 5,
+            "name": "Popchips Potato Chips Variety Pack",
+            "brand": "Popchips",
+            "price": "SalesRank #5",
+            "capacity": "칩/팝콘/크래커 카테고리 5위",
+            "image": "🍿",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Popchips+Potato+Chips+Variety+Pack",
+            "desc": "가공식품/당류 가능성 감점",
+            "tags": [
+                  "Rank 5",
+                  "Popchips",
+                  "칩/팝콘/크래커"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 2.6,
+                  "value": 3.3,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-096",
+            "category": "칩/팝콘/크래커",
+            "rank": 6,
+            "name": "Hippeas Organic Chickpea Puffs",
+            "brand": "Hippeas",
+            "price": "SalesRank #6",
+            "capacity": "칩/팝콘/크래커 카테고리 6위",
+            "image": "🍿",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Hippeas+Organic+Chickpea+Puffs",
+            "desc": "건강/웰니스 키워드 반영; 환경/윤리 키워드 반영; 가공식품/당류 가능성 감점",
+            "tags": [
+                  "Rank 6",
+                  "Hippeas",
+                  "칩/팝콘/크래커"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.0,
+                  "value": 3.2,
+                  "environment": 3.4,
+                  "welfare": 3.6,
+                  "social": 3.4
+            }
+      },
+      {
+            "id": "amazon-097",
+            "category": "칩/팝콘/크래커",
+            "rank": 7,
+            "name": "Lay's Classic Potato Chips",
+            "brand": "Lay's",
+            "price": "SalesRank #7",
+            "capacity": "칩/팝콘/크래커 카테고리 7위",
+            "image": "🍿",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Lay%27s+Classic+Potato+Chips",
+            "desc": "가공식품/당류 가능성 감점",
+            "tags": [
+                  "Rank 7",
+                  "Lay's",
+                  "칩/팝콘/크래커"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 2.2,
+                  "value": 3.2,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-098",
+            "category": "칩/팝콘/크래커",
+            "rank": 8,
+            "name": "Doritos Nacho Cheese Tortilla Chips",
+            "brand": "Doritos",
+            "price": "SalesRank #8",
+            "capacity": "칩/팝콘/크래커 카테고리 8위",
+            "image": "🍿",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Doritos+Nacho+Cheese+Tortilla+Chips",
+            "desc": "가공식품/당류 가능성 감점",
+            "tags": [
+                  "Rank 8",
+                  "Doritos",
+                  "칩/팝콘/크래커"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 2.2,
+                  "value": 3.2,
+                  "environment": 3.0,
+                  "welfare": 2.7,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-099",
+            "category": "칩/팝콘/크래커",
+            "rank": 9,
+            "name": "Simple Mills Almond Flour Crackers",
+            "brand": "Simple Mills",
+            "price": "SalesRank #9",
+            "capacity": "칩/팝콘/크래커 카테고리 9위",
+            "image": "🍿",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Simple+Mills+Almond+Flour+Crackers",
+            "desc": "가공식품/당류 가능성 감점",
+            "tags": [
+                  "Rank 9",
+                  "Simple Mills",
+                  "칩/팝콘/크래커"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.0,
+                  "value": 3.2,
+                  "environment": 3.0,
+                  "welfare": 3.6,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-100",
+            "category": "칩/팝콘/크래커",
+            "rank": 10,
+            "name": "Mary's Gone Crackers Original",
+            "brand": "Mary's Gone Crackers",
+            "price": "SalesRank #10",
+            "capacity": "칩/팝콘/크래커 카테고리 10위",
+            "image": "🍿",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Mary%27s+Gone+Crackers+Original",
+            "desc": "가공식품/당류 가능성 감점",
+            "tags": [
+                  "Rank 10",
+                  "Mary's Gone Crackers",
+                  "칩/팝콘/크래커"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 2.6,
+                  "value": 3.2,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-101",
+            "category": "초콜릿/캔디",
+            "rank": 1,
+            "name": "Ferrero Rocher Fine Hazelnut Milk Chocolate",
+            "brand": "Ferrero Rocher",
+            "price": "SalesRank #1",
+            "capacity": "초콜릿/캔디 카테고리 1위",
+            "image": "🍬",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Ferrero+Rocher+Fine+Hazelnut+Milk+Chocolate",
+            "desc": "가공식품/당류 가능성 감점",
+            "tags": [
+                  "Rank 1",
+                  "Ferrero Rocher",
+                  "초콜릿/캔디"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 2.2,
+                  "value": 3.7,
+                  "environment": 3.0,
+                  "welfare": 2.7,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-102",
+            "category": "초콜릿/캔디",
+            "rank": 2,
+            "name": "Lindt LINDOR Milk Chocolate Truffles",
+            "brand": "Lindt",
+            "price": "SalesRank #2",
+            "capacity": "초콜릿/캔디 카테고리 2위",
+            "image": "🍬",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Lindt+LINDOR+Milk+Chocolate+Truffles",
+            "desc": "가공식품/당류 가능성 감점",
+            "tags": [
+                  "Rank 2",
+                  "Lindt",
+                  "초콜릿/캔디"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 2.2,
+                  "value": 3.6,
+                  "environment": 3.0,
+                  "welfare": 2.7,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-103",
+            "category": "초콜릿/캔디",
+            "rank": 3,
+            "name": "M&M'S Peanut Chocolate Candy",
+            "brand": "M&M'S",
+            "price": "SalesRank #3",
+            "capacity": "초콜릿/캔디 카테고리 3위",
+            "image": "🍬",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=M%26M%27S+Peanut+Chocolate+Candy",
+            "desc": "가공식품/당류 가능성 감점",
+            "tags": [
+                  "Rank 3",
+                  "M&M'S",
+                  "초콜릿/캔디"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 1.5,
+                  "value": 3.5,
+                  "environment": 3.0,
+                  "welfare": 2.7,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-104",
+            "category": "초콜릿/캔디",
+            "rank": 4,
+            "name": "Reese's Peanut Butter Cups",
+            "brand": "Reese's",
+            "price": "SalesRank #4",
+            "capacity": "초콜릿/캔디 카테고리 4위",
+            "image": "🍬",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Reese%27s+Peanut+Butter+Cups",
+            "desc": "가공식품/당류 가능성 감점",
+            "tags": [
+                  "Rank 4",
+                  "Reese's",
+                  "초콜릿/캔디"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 2.2,
+                  "value": 3.4,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-105",
+            "category": "초콜릿/캔디",
+            "rank": 5,
+            "name": "Hershey's Kisses Milk Chocolate",
+            "brand": "Hershey's",
+            "price": "SalesRank #5",
+            "capacity": "초콜릿/캔디 카테고리 5위",
+            "image": "🍬",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Hershey%27s+Kisses+Milk+Chocolate",
+            "desc": "가공식품/당류 가능성 감점",
+            "tags": [
+                  "Rank 5",
+                  "Hershey's",
+                  "초콜릿/캔디"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 1.9,
+                  "value": 3.3,
+                  "environment": 3.0,
+                  "welfare": 2.7,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-106",
+            "category": "초콜릿/캔디",
+            "rank": 6,
+            "name": "Brookside Dark Chocolate Acai & Blueberry Flavors",
+            "brand": "Brookside",
+            "price": "SalesRank #6",
+            "capacity": "초콜릿/캔디 카테고리 6위",
+            "image": "🍬",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Brookside+Dark+Chocolate+Acai+%26+Blueberry+Flavors",
+            "desc": "가공식품/당류 가능성 감점",
+            "tags": [
+                  "Rank 6",
+                  "Brookside",
+                  "초콜릿/캔디"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 2.2,
+                  "value": 3.2,
+                  "environment": 3.0,
+                  "welfare": 2.7,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-107",
+            "category": "초콜릿/캔디",
+            "rank": 7,
+            "name": "Hu Organic Simple Dark Chocolate",
+            "brand": "Hu",
+            "price": "SalesRank #7",
+            "capacity": "초콜릿/캔디 카테고리 7위",
+            "image": "🍬",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Hu+Organic+Simple+Dark+Chocolate",
+            "desc": "건강/웰니스 키워드 반영; 환경/윤리 키워드 반영; 가공식품/당류 가능성 감점",
+            "tags": [
+                  "Rank 7",
+                  "Hu",
+                  "초콜릿/캔디"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 2.6,
+                  "value": 3.2,
+                  "environment": 3.4,
+                  "welfare": 3.3,
+                  "social": 3.4
+            }
+      },
+      {
+            "id": "amazon-108",
+            "category": "초콜릿/캔디",
+            "rank": 8,
+            "name": "UNREAL Dark Chocolate Coconut Bars",
+            "brand": "UNREAL",
+            "price": "SalesRank #8",
+            "capacity": "초콜릿/캔디 카테고리 8위",
+            "image": "🍬",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=UNREAL+Dark+Chocolate+Coconut+Bars",
+            "desc": "가공식품/당류 가능성 감점",
+            "tags": [
+                  "Rank 8",
+                  "UNREAL",
+                  "초콜릿/캔디"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 2.2,
+                  "value": 3.2,
+                  "environment": 3.0,
+                  "welfare": 2.7,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-109",
+            "category": "초콜릿/캔디",
+            "rank": 9,
+            "name": "Ghirardelli Chocolate Squares Variety Pack",
+            "brand": "Ghirardelli",
+            "price": "SalesRank #9",
+            "capacity": "초콜릿/캔디 카테고리 9위",
+            "image": "🍬",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Ghirardelli+Chocolate+Squares+Variety+Pack",
+            "desc": "가공식품/당류 가능성 감점",
+            "tags": [
+                  "Rank 9",
+                  "Ghirardelli",
+                  "초콜릿/캔디"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 2.2,
+                  "value": 3.2,
+                  "environment": 3.0,
+                  "welfare": 2.7,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-110",
+            "category": "초콜릿/캔디",
+            "rank": 10,
+            "name": "SmartSweets Low Sugar Candy",
+            "brand": "SmartSweets",
+            "price": "SalesRank #10",
+            "capacity": "초콜릿/캔디 카테고리 10위",
+            "image": "🍬",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=SmartSweets+Low+Sugar+Candy",
+            "desc": "건강/웰니스 키워드 반영; 가공식품/당류 가능성 감점",
+            "tags": [
+                  "Rank 10",
+                  "SmartSweets",
+                  "초콜릿/캔디"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 2.2,
+                  "value": 3.2,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-111",
+            "category": "견과/씨앗/건과일",
+            "rank": 1,
+            "name": "Wonderful Pistachios No Shells",
+            "brand": "Wonderful Pistachios",
+            "price": "SalesRank #1",
+            "capacity": "견과/씨앗/건과일 카테고리 1위",
+            "image": "🥜",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Wonderful+Pistachios+No+Shells",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 1",
+                  "Wonderful Pistachios",
+                  "견과/씨앗/건과일"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.8,
+                  "value": 3.7,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-112",
+            "category": "견과/씨앗/건과일",
+            "rank": 2,
+            "name": "Blue Diamond Almonds Whole Natural",
+            "brand": "Blue Diamond",
+            "price": "SalesRank #2",
+            "capacity": "견과/씨앗/건과일 카테고리 2위",
+            "image": "🥜",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Blue+Diamond+Almonds+Whole+Natural",
+            "desc": "건강/웰니스 키워드 반영",
+            "tags": [
+                  "Rank 2",
+                  "Blue Diamond",
+                  "견과/씨앗/건과일"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 4.5,
+                  "value": 3.6,
+                  "environment": 3.0,
+                  "welfare": 3.6,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-113",
+            "category": "견과/씨앗/건과일",
+            "rank": 3,
+            "name": "Planters Deluxe Mixed Nuts",
+            "brand": "Planters",
+            "price": "SalesRank #3",
+            "capacity": "견과/씨앗/건과일 카테고리 3위",
+            "image": "🥜",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Planters+Deluxe+Mixed+Nuts",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 3",
+                  "Planters",
+                  "견과/씨앗/건과일"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.4,
+                  "value": 3.5,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-114",
+            "category": "견과/씨앗/건과일",
+            "rank": 4,
+            "name": "Terrasoul Superfoods Organic Chia Seeds",
+            "brand": "Terrasoul Superfoods",
+            "price": "SalesRank #4",
+            "capacity": "견과/씨앗/건과일 카테고리 4위",
+            "image": "🥜",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Terrasoul+Superfoods+Organic+Chia+Seeds",
+            "desc": "건강/웰니스 키워드 반영; 환경/윤리 키워드 반영",
+            "tags": [
+                  "Rank 4",
+                  "Terrasoul Superfoods",
+                  "견과/씨앗/건과일"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 4.1,
+                  "value": 3.4,
+                  "environment": 3.4,
+                  "welfare": 3.6,
+                  "social": 3.4
+            }
+      },
+      {
+            "id": "amazon-115",
+            "category": "견과/씨앗/건과일",
+            "rank": 5,
+            "name": "BetterBody Foods Organic Chia Seeds",
+            "brand": "BetterBody Foods",
+            "price": "SalesRank #5",
+            "capacity": "견과/씨앗/건과일 카테고리 5위",
+            "image": "🥜",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=BetterBody+Foods+Organic+Chia+Seeds",
+            "desc": "건강/웰니스 키워드 반영; 환경/윤리 키워드 반영",
+            "tags": [
+                  "Rank 5",
+                  "BetterBody Foods",
+                  "견과/씨앗/건과일"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 4.1,
+                  "value": 3.3,
+                  "environment": 3.4,
+                  "welfare": 3.6,
+                  "social": 3.4
+            }
+      },
+      {
+            "id": "amazon-116",
+            "category": "견과/씨앗/건과일",
+            "rank": 6,
+            "name": "Nut Cravings Gourmet Nut Gift Basket",
+            "brand": "Nut Cravings",
+            "price": "SalesRank #6",
+            "capacity": "견과/씨앗/건과일 카테고리 6위",
+            "image": "🥜",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Nut+Cravings+Gourmet+Nut+Gift+Basket",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 6",
+                  "Nut Cravings",
+                  "견과/씨앗/건과일"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.4,
+                  "value": 3.2,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-117",
+            "category": "견과/씨앗/건과일",
+            "rank": 7,
+            "name": "Amazon Happy Belly Whole Cashews",
+            "brand": "Happy Belly",
+            "price": "SalesRank #7",
+            "capacity": "견과/씨앗/건과일 카테고리 7위",
+            "image": "🥜",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Amazon+Happy+Belly+Whole+Cashews",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 7",
+                  "Happy Belly",
+                  "견과/씨앗/건과일"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.8,
+                  "value": 3.5,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-118",
+            "category": "견과/씨앗/건과일",
+            "rank": 8,
+            "name": "Sun-Maid California Raisins",
+            "brand": "Sun-Maid",
+            "price": "SalesRank #8",
+            "capacity": "견과/씨앗/건과일 카테고리 8위",
+            "image": "🥜",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Sun-Maid+California+Raisins",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 8",
+                  "Sun-Maid",
+                  "견과/씨앗/건과일"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.8,
+                  "value": 3.2,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-119",
+            "category": "견과/씨앗/건과일",
+            "rank": 9,
+            "name": "Made In Nature Organic Deglet Noor Dates",
+            "brand": "Made In Nature",
+            "price": "SalesRank #9",
+            "capacity": "견과/씨앗/건과일 카테고리 9위",
+            "image": "🥜",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Made+In+Nature+Organic+Deglet+Noor+Dates",
+            "desc": "건강/웰니스 키워드 반영; 환경/윤리 키워드 반영",
+            "tags": [
+                  "Rank 9",
+                  "Made In Nature",
+                  "견과/씨앗/건과일"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 4.1,
+                  "value": 3.2,
+                  "environment": 3.4,
+                  "welfare": 3.6,
+                  "social": 3.4
+            }
+      },
+      {
+            "id": "amazon-120",
+            "category": "견과/씨앗/건과일",
+            "rank": 10,
+            "name": "Orchard Valley Harvest Trail Mix",
+            "brand": "Orchard Valley Harvest",
+            "price": "SalesRank #10",
+            "capacity": "견과/씨앗/건과일 카테고리 10위",
+            "image": "🥜",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Orchard+Valley+Harvest+Trail+Mix",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 10",
+                  "Orchard Valley Harvest",
+                  "견과/씨앗/건과일"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.4,
+                  "value": 3.2,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-121",
+            "category": "스프레드/잼/너트버터",
+            "rank": 1,
+            "name": "Jif Creamy Peanut Butter",
+            "brand": "Jif",
+            "price": "SalesRank #1",
+            "capacity": "스프레드/잼/너트버터 카테고리 1위",
+            "image": "🥜",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Jif+Creamy+Peanut+Butter",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 1",
+                  "Jif",
+                  "스프레드/잼/너트버터"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.0,
+                  "value": 3.7,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-122",
+            "category": "스프레드/잼/너트버터",
+            "rank": 2,
+            "name": "SKIPPY Natural Creamy Peanut Butter",
+            "brand": "SKIPPY",
+            "price": "SalesRank #2",
+            "capacity": "스프레드/잼/너트버터 카테고리 2위",
+            "image": "🥜",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=SKIPPY+Natural+Creamy+Peanut+Butter",
+            "desc": "건강/웰니스 키워드 반영",
+            "tags": [
+                  "Rank 2",
+                  "SKIPPY",
+                  "스프레드/잼/너트버터"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.4,
+                  "value": 3.6,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-123",
+            "category": "스프레드/잼/너트버터",
+            "rank": 3,
+            "name": "Justin's Classic Almond Butter",
+            "brand": "Justin's",
+            "price": "SalesRank #3",
+            "capacity": "스프레드/잼/너트버터 카테고리 3위",
+            "image": "🥜",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Justin%27s+Classic+Almond+Butter",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 3",
+                  "Justin's",
+                  "스프레드/잼/너트버터"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.4,
+                  "value": 3.5,
+                  "environment": 3.0,
+                  "welfare": 3.6,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-124",
+            "category": "스프레드/잼/너트버터",
+            "rank": 4,
+            "name": "Once Again Organic Creamy Peanut Butter",
+            "brand": "Once Again",
+            "price": "SalesRank #4",
+            "capacity": "스프레드/잼/너트버터 카테고리 4위",
+            "image": "🥜",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Once+Again+Organic+Creamy+Peanut+Butter",
+            "desc": "건강/웰니스 키워드 반영; 환경/윤리 키워드 반영",
+            "tags": [
+                  "Rank 4",
+                  "Once Again",
+                  "스프레드/잼/너트버터"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.4,
+                  "value": 3.4,
+                  "environment": 3.4,
+                  "welfare": 3.6,
+                  "social": 3.4
+            }
+      },
+      {
+            "id": "amazon-125",
+            "category": "스프레드/잼/너트버터",
+            "rank": 5,
+            "name": "Nutella Hazelnut Spread",
+            "brand": "Nutella",
+            "price": "SalesRank #5",
+            "capacity": "스프레드/잼/너트버터 카테고리 5위",
+            "image": "🥜",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Nutella+Hazelnut+Spread",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 5",
+                  "Nutella",
+                  "스프레드/잼/너트버터"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 2.6,
+                  "value": 3.3,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-126",
+            "category": "스프레드/잼/너트버터",
+            "rank": 6,
+            "name": "365 by Whole Foods Market Organic Peanut Butter",
+            "brand": "365 by Whole Foods Market",
+            "price": "SalesRank #6",
+            "capacity": "스프레드/잼/너트버터 카테고리 6위",
+            "image": "🥜",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=365+by+Whole+Foods+Market+Organic+Peanut+Butter",
+            "desc": "건강/웰니스 키워드 반영; 환경/윤리 키워드 반영",
+            "tags": [
+                  "Rank 6",
+                  "365 by Whole Foods Market",
+                  "스프레드/잼/너트버터"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.7,
+                  "value": 3.5,
+                  "environment": 3.8,
+                  "welfare": 3.6,
+                  "social": 3.7
+            }
+      },
+      {
+            "id": "amazon-127",
+            "category": "스프레드/잼/너트버터",
+            "rank": 7,
+            "name": "Barney Butter Smooth Almond Butter",
+            "brand": "Barney Butter",
+            "price": "SalesRank #7",
+            "capacity": "스프레드/잼/너트버터 카테고리 7위",
+            "image": "🥜",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Barney+Butter+Smooth+Almond+Butter",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 7",
+                  "Barney Butter",
+                  "스프레드/잼/너트버터"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.4,
+                  "value": 3.2,
+                  "environment": 3.0,
+                  "welfare": 3.6,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-128",
+            "category": "스프레드/잼/너트버터",
+            "rank": 8,
+            "name": "MaraNatha No Stir Almond Butter",
+            "brand": "MaraNatha",
+            "price": "SalesRank #8",
+            "capacity": "스프레드/잼/너트버터 카테고리 8위",
+            "image": "🥜",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=MaraNatha+No+Stir+Almond+Butter",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 8",
+                  "MaraNatha",
+                  "스프레드/잼/너트버터"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.4,
+                  "value": 3.2,
+                  "environment": 3.0,
+                  "welfare": 3.6,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-129",
+            "category": "스프레드/잼/너트버터",
+            "rank": 9,
+            "name": "PBfit All-Natural Peanut Butter Powder",
+            "brand": "PBfit",
+            "price": "SalesRank #9",
+            "capacity": "스프레드/잼/너트버터 카테고리 9위",
+            "image": "🥜",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=PBfit+All-Natural+Peanut+Butter+Powder",
+            "desc": "건강/웰니스 키워드 반영",
+            "tags": [
+                  "Rank 9",
+                  "PBfit",
+                  "스프레드/잼/너트버터"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.4,
+                  "value": 3.2,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-130",
+            "category": "스프레드/잼/너트버터",
+            "rank": 10,
+            "name": "Artisana Organics Raw Almond Butter",
+            "brand": "Artisana Organics",
+            "price": "SalesRank #10",
+            "capacity": "스프레드/잼/너트버터 카테고리 10위",
+            "image": "🥜",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Artisana+Organics+Raw+Almond+Butter",
+            "desc": "건강/웰니스 키워드 반영; 환경/윤리 키워드 반영",
+            "tags": [
+                  "Rank 10",
+                  "Artisana Organics",
+                  "스프레드/잼/너트버터"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.7,
+                  "value": 3.2,
+                  "environment": 3.4,
+                  "welfare": 3.6,
+                  "social": 3.4
+            }
+      },
+      {
+            "id": "amazon-131",
+            "category": "소스/조미료",
+            "rank": 1,
+            "name": "Heinz Tomato Ketchup",
+            "brand": "Heinz",
+            "price": "SalesRank #1",
+            "capacity": "소스/조미료 카테고리 1위",
+            "image": "🧂",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Heinz+Tomato+Ketchup",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 1",
+                  "Heinz",
+                  "소스/조미료"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 2.6,
+                  "value": 3.9,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-132",
+            "category": "소스/조미료",
+            "rank": 2,
+            "name": "Frank's RedHot Original Cayenne Pepper Sauce",
+            "brand": "Frank's RedHot",
+            "price": "SalesRank #2",
+            "capacity": "소스/조미료 카테고리 2위",
+            "image": "🧂",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Frank%27s+RedHot+Original+Cayenne+Pepper+Sauce",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 2",
+                  "Frank's RedHot",
+                  "소스/조미료"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.0,
+                  "value": 3.8,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-133",
+            "category": "소스/조미료",
+            "rank": 3,
+            "name": "Cholula Original Hot Sauce",
+            "brand": "Cholula",
+            "price": "SalesRank #3",
+            "capacity": "소스/조미료 카테고리 3위",
+            "image": "🧂",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Cholula+Original+Hot+Sauce",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 3",
+                  "Cholula",
+                  "소스/조미료"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.0,
+                  "value": 3.7,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-134",
+            "category": "소스/조미료",
+            "rank": 4,
+            "name": "Huy Fong Sriracha Hot Chili Sauce",
+            "brand": "Huy Fong",
+            "price": "SalesRank #4",
+            "capacity": "소스/조미료 카테고리 4위",
+            "image": "🧂",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Huy+Fong+Sriracha+Hot+Chili+Sauce",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 4",
+                  "Huy Fong",
+                  "소스/조미료"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.0,
+                  "value": 3.6,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-135",
+            "category": "소스/조미료",
+            "rank": 5,
+            "name": "Rao's Homemade Marinara Sauce",
+            "brand": "Rao's",
+            "price": "SalesRank #5",
+            "capacity": "소스/조미료 카테고리 5위",
+            "image": "🧂",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Rao%27s+Homemade+Marinara+Sauce",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 5",
+                  "Rao's",
+                  "소스/조미료"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.0,
+                  "value": 3.5,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-136",
+            "category": "소스/조미료",
+            "rank": 6,
+            "name": "Primal Kitchen Avocado Oil Mayo",
+            "brand": "Primal Kitchen",
+            "price": "SalesRank #6",
+            "capacity": "소스/조미료 카테고리 6위",
+            "image": "🧂",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Primal+Kitchen+Avocado+Oil+Mayo",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 6",
+                  "Primal Kitchen",
+                  "소스/조미료"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.0,
+                  "value": 3.4,
+                  "environment": 3.0,
+                  "welfare": 2.7,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-137",
+            "category": "소스/조미료",
+            "rank": 7,
+            "name": "Hellmann's Real Mayonnaise",
+            "brand": "Hellmann's",
+            "price": "SalesRank #7",
+            "capacity": "소스/조미료 카테고리 7위",
+            "image": "🧂",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Hellmann%27s+Real+Mayonnaise",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 7",
+                  "Hellmann's",
+                  "소스/조미료"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 2.6,
+                  "value": 3.4,
+                  "environment": 3.0,
+                  "welfare": 2.7,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-138",
+            "category": "소스/조미료",
+            "rank": 8,
+            "name": "Bachan's Japanese Barbecue Sauce",
+            "brand": "Bachan's",
+            "price": "SalesRank #8",
+            "capacity": "소스/조미료 카테고리 8위",
+            "image": "🧂",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Bachan%27s+Japanese+Barbecue+Sauce",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 8",
+                  "Bachan's",
+                  "소스/조미료"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.0,
+                  "value": 3.4,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-139",
+            "category": "소스/조미료",
+            "rank": 9,
+            "name": "Bragg Liquid Aminos",
+            "brand": "Bragg",
+            "price": "SalesRank #9",
+            "capacity": "소스/조미료 카테고리 9위",
+            "image": "🧂",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Bragg+Liquid+Aminos",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 9",
+                  "Bragg",
+                  "소스/조미료"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.0,
+                  "value": 3.4,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-140",
+            "category": "소스/조미료",
+            "rank": 10,
+            "name": "Kikkoman Soy Sauce",
+            "brand": "Kikkoman",
+            "price": "SalesRank #10",
+            "capacity": "소스/조미료 카테고리 10위",
+            "image": "🧂",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Kikkoman+Soy+Sauce",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 10",
+                  "Kikkoman",
+                  "소스/조미료"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.0,
+                  "value": 3.4,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-141",
+            "category": "베이킹/곡물",
+            "rank": 1,
+            "name": "King Arthur Unbleached All-Purpose Flour",
+            "brand": "King Arthur Baking",
+            "price": "SalesRank #1",
+            "capacity": "베이킹/곡물 카테고리 1위",
+            "image": "🌾",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=King+Arthur+Unbleached+All-Purpose+Flour",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 1",
+                  "King Arthur Baking",
+                  "베이킹/곡물"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.0,
+                  "value": 3.9,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-142",
+            "category": "베이킹/곡물",
+            "rank": 2,
+            "name": "Bob's Red Mill Super-Fine Almond Flour",
+            "brand": "Bob's Red Mill",
+            "price": "SalesRank #2",
+            "capacity": "베이킹/곡물 카테고리 2위",
+            "image": "🌾",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Bob%27s+Red+Mill+Super-Fine+Almond+Flour",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 2",
+                  "Bob's Red Mill",
+                  "베이킹/곡물"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.4,
+                  "value": 3.8,
+                  "environment": 3.0,
+                  "welfare": 3.6,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-143",
+            "category": "베이킹/곡물",
+            "rank": 3,
+            "name": "Anthony's Organic Cocoa Powder",
+            "brand": "Anthony's",
+            "price": "SalesRank #3",
+            "capacity": "베이킹/곡물 카테고리 3위",
+            "image": "🌾",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Anthony%27s+Organic+Cocoa+Powder",
+            "desc": "건강/웰니스 키워드 반영; 환경/윤리 키워드 반영",
+            "tags": [
+                  "Rank 3",
+                  "Anthony's",
+                  "베이킹/곡물"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.4,
+                  "value": 3.7,
+                  "environment": 3.4,
+                  "welfare": 3.6,
+                  "social": 3.4
+            }
+      },
+      {
+            "id": "amazon-144",
+            "category": "베이킹/곡물",
+            "rank": 4,
+            "name": "Domino Granulated Sugar",
+            "brand": "Domino",
+            "price": "SalesRank #4",
+            "capacity": "베이킹/곡물 카테고리 4위",
+            "image": "🌾",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Domino+Granulated+Sugar",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 4",
+                  "Domino",
+                  "베이킹/곡물"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 2.6,
+                  "value": 3.6,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-145",
+            "category": "베이킹/곡물",
+            "rank": 5,
+            "name": "Arm & Hammer Baking Soda",
+            "brand": "Arm & Hammer",
+            "price": "SalesRank #5",
+            "capacity": "베이킹/곡물 카테고리 5위",
+            "image": "🌾",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Arm+%26+Hammer+Baking+Soda",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 5",
+                  "Arm & Hammer",
+                  "베이킹/곡물"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 2.6,
+                  "value": 3.5,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-146",
+            "category": "베이킹/곡물",
+            "rank": 6,
+            "name": "Clabber Girl Baking Powder",
+            "brand": "Clabber Girl",
+            "price": "SalesRank #6",
+            "capacity": "베이킹/곡물 카테고리 6위",
+            "image": "🌾",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Clabber+Girl+Baking+Powder",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 6",
+                  "Clabber Girl",
+                  "베이킹/곡물"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.0,
+                  "value": 3.4,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-147",
+            "category": "베이킹/곡물",
+            "rank": 7,
+            "name": "Fleischmann's Instant Dry Yeast",
+            "brand": "Fleischmann's",
+            "price": "SalesRank #7",
+            "capacity": "베이킹/곡물 카테고리 7위",
+            "image": "🌾",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Fleischmann%27s+Instant+Dry+Yeast",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 7",
+                  "Fleischmann's",
+                  "베이킹/곡물"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.0,
+                  "value": 3.4,
+                  "environment": 3.0,
+                  "welfare": 3.0,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-148",
+            "category": "베이킹/곡물",
+            "rank": 8,
+            "name": "Ghirardelli Semi-Sweet Chocolate Baking Chips",
+            "brand": "Ghirardelli",
+            "price": "SalesRank #8",
+            "capacity": "베이킹/곡물 카테고리 8위",
+            "image": "🌾",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Ghirardelli+Semi-Sweet+Chocolate+Baking+Chips",
+            "desc": "상품명/브랜드/category 기반 기본 휴리스틱",
+            "tags": [
+                  "Rank 8",
+                  "Ghirardelli",
+                  "베이킹/곡물"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 2.6,
+                  "value": 3.4,
+                  "environment": 3.0,
+                  "welfare": 2.7,
+                  "social": 3.0
+            }
+      },
+      {
+            "id": "amazon-149",
+            "category": "베이킹/곡물",
+            "rank": 9,
+            "name": "Bob's Red Mill Organic Quinoa",
+            "brand": "Bob's Red Mill",
+            "price": "SalesRank #9",
+            "capacity": "베이킹/곡물 카테고리 9위",
+            "image": "🌾",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Bob%27s+Red+Mill+Organic+Quinoa",
+            "desc": "건강/웰니스 키워드 반영; 환경/윤리 키워드 반영",
+            "tags": [
+                  "Rank 9",
+                  "Bob's Red Mill",
+                  "베이킹/곡물"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.7,
+                  "value": 3.4,
+                  "environment": 3.4,
+                  "welfare": 3.6,
+                  "social": 3.4
+            }
+      },
+      {
+            "id": "amazon-150",
+            "category": "베이킹/곡물",
+            "rank": 10,
+            "name": "Lundberg Organic Brown Rice",
+            "brand": "Lundberg",
+            "price": "SalesRank #10",
+            "capacity": "베이킹/곡물 카테고리 10위",
+            "image": "🌾",
+            "imageUrl": "",
+            "amazonUrl": "https://www.amazon.com/s?k=Lundberg+Organic+Brown+Rice",
+            "desc": "건강/웰니스 키워드 반영; 환경/윤리 키워드 반영",
+            "tags": [
+                  "Rank 10",
+                  "Lundberg",
+                  "베이킹/곡물"
+            ],
+            "warning": "실제 존재 상품 기반 발표용 CSV. 실시간 SalesRank와 이미지 URL은 PA-API BrowseNodeInfo/Images로 재검증 필요.",
+            "scores": {
+                  "health": 3.7,
+                  "value": 3.4,
+                  "environment": 3.4,
+                  "welfare": 3.6,
+                  "social": 3.4
+            }
+      }
+];
+
+    const categories = [...new Set(products.map(product => product.category))];
+    let activeCategory = "전체";
+    let activeMode = "health";
+
+    const mainPage = document.getElementById("mainPage");
+    const searchPage = document.getElementById("searchPage");
+    const detailPage = document.getElementById("detailPage");
+    const groupsEl = document.getElementById("groups");
+    const searchForm = document.getElementById("searchForm");
+    const searchInput = document.getElementById("searchInput");
+    const searchTitle = document.getElementById("searchTitle");
+    const searchDescription = document.getElementById("searchDescription");
+    const searchModeButtons = document.getElementById("searchModeButtons");
+    const searchContent = document.getElementById("searchContent");
+    const resultCount = document.getElementById("resultCount");
+    const activeFilter = document.getElementById("activeFilter");
+    const categoryChips = document.getElementById("categoryChips");
+    const mainModeButtons = document.getElementById("mainModeButtons");
+    const detailContent = document.getElementById("detailContent");
+
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function productImageMarkup(product) {
+      if (product.imageUrl) {
+        const safeUrl = escapeHtml(product.imageUrl);
+        const safeName = escapeHtml(product.name);
+        return `<img src="${safeUrl}" alt="${safeName} 이미지" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'), {textContent: '${product.image || '📦'}'}))">`;
+      }
+      return `<span>${escapeHtml(product.image || "📦")}</span>`;
+    }
+
+    function weightedScore(product, modeKey = activeMode) {
+      const mode = modes[modeKey];
+      const raw = scoreKeys.reduce((sum, item) => sum + product.scores[item.key] * mode.weights[item.key], 0);
+      return Math.round(raw * 100) / 100;
+    }
+
+    function starRating(score) {
+      const width = Math.max(0, Math.min(100, (score / 5) * 100));
+      return `
+        <span class="star-box" aria-label="5점 만점 중 ${score.toFixed(1)}점">
+          ★★★★★
+          <span class="star-fill" style="width:${width}%">★★★★★</span>
+        </span>
+      `;
+    }
+
+    function modeWeightText(modeKey) {
+      return scoreKeys.map(item => `${item.label} ${Math.round(modes[modeKey].weights[item.key] * 100)}%`).join(" · ");
+    }
+
+    function renderMainModes() {
+      const buttons = Object.entries(modes).map(([key, mode]) => {
+        return `<button class="mode-button ${key === activeMode ? "is-active" : ""}" type="button" data-mode="${key}">${mode.label}</button>`;
+      }).join("");
+      mainModeButtons.innerHTML = `<span class="mode-label">총점 기준</span>${buttons}`;
+
+      mainModeButtons.querySelectorAll("[data-mode]").forEach(button => {
+        button.addEventListener("click", () => {
+          activeMode = button.dataset.mode;
+          renderMainModes();
+          renderProducts();
+        });
+      });
+    }
+
+    function renderSearchModes(query) {
+      const buttons = Object.entries(modes).map(([key, mode]) => {
+        return `<button class="mode-button ${key === activeMode ? "is-active" : ""}" type="button" data-mode="${key}">${mode.label}</button>`;
+      }).join("");
+      searchModeButtons.innerHTML = `<span class="mode-label">추천 기준</span>${buttons}`;
+
+      searchModeButtons.querySelectorAll("[data-mode]").forEach(button => {
+        button.addEventListener("click", () => {
+          activeMode = button.dataset.mode;
+          renderMainModes();
+          renderSearchPage(query);
+        });
+      });
+    }
+
+    function renderCategoryChips() {
+      const allCount = products.length;
+      const allChip = `
+        <button class="chip ${activeCategory === "전체" ? "is-active" : ""}" type="button" data-category="전체">
+          <span class="chip-main">전체</span>
+          <span class="chip-sub">${allCount}개</span>
+        </button>
+      `;
+
+      const categoryHtml = categories.map(category => {
+        const count = products.filter(product => product.category === category).length;
+        const icon = categoryIcons[category] || "📦";
+        return `
+          <button class="chip ${activeCategory === category ? "is-active" : ""}" type="button" data-category="${category}">
+            <span class="chip-main">${icon} ${category}</span>
+            <span class="chip-sub">${count}개</span>
+          </button>
+        `;
+      }).join("");
+
+      categoryChips.innerHTML = allChip + categoryHtml;
+
+      categoryChips.querySelectorAll("[data-category]").forEach(button => {
+        button.addEventListener("click", () => {
+          activeCategory = button.dataset.category;
+          renderCategoryChips();
+          renderProducts();
+        });
+      });
+    }
+
+    function productMatches(product, query) {
+      const source = [
+        product.name,
+        product.category,
+        product.brand,
+        product.price,
+        product.capacity,
+        product.desc,
+        product.amazonUrl,
+        product.warning,
+        ...(product.tags || [])
+      ].join(" ").toLowerCase();
+
+      return source.includes(query);
+    }
+
+    function getFilteredProducts() {
+      const query = searchInput.value.trim().toLowerCase();
+      return products.filter(product => {
+        const categoryOk = activeCategory === "전체" || product.category === activeCategory;
+        const searchOk = !query || productMatches(product, query);
+        return categoryOk && searchOk;
+      });
+    }
+
+    function renderProducts() {
+      const filtered = getFilteredProducts();
+      resultCount.textContent = `상품 ${filtered.length}개`;
+      activeFilter.textContent = activeCategory === "전체" ? `${modes[activeMode].label} · 전체 보기` : `${modes[activeMode].label} · ${activeCategory}`;
+
+      if (!filtered.length) {
+        groupsEl.innerHTML = `
+          <div class="empty-state">
+            검색 결과가 없습니다. 다른 검색어를 입력해 주세요.
+          </div>
+        `;
+        return;
+      }
+
+      const grouped = categories
+        .map(category => ({
+          category,
+          items: filtered.filter(product => product.category === category)
+        }))
+        .filter(group => group.items.length);
+
+      groupsEl.innerHTML = grouped.map(group => `
+        <article class="category-group">
+          <div class="group-head">
+            <h3 class="group-title"><span class="group-icon">${categoryIcons[group.category] || "📦"}</span>${group.category}</h3>
+            <span class="group-count">${group.items.length}개 상품</span>
+          </div>
+          <div class="product-grid">
+            ${group.items.map(product => renderCard(product)).join("")}
+          </div>
+        </article>
+      `).join("");
+
+      groupsEl.querySelectorAll("[data-product-id]").forEach(card => {
+        card.addEventListener("click", () => {
+          location.hash = `product=${card.dataset.productId}`;
+        });
+      });
+    }
+
+    function renderCard(product) {
+      const score = weightedScore(product).toFixed(2);
+      return `
+        <button class="product-card" type="button" data-product-id="${product.id}" aria-label="${escapeHtml(product.name)} 상세 정보 보기">
+          <div class="photo" aria-hidden="true">
+            ${productImageMarkup(product)}
+          </div>
+          <div class="card-top">
+            <div class="card-text">
+              <span class="category-tag">${escapeHtml(product.category)}</span>
+              <h3 class="product-name">${escapeHtml(product.name)}</h3>
+              <p class="product-desc">${escapeHtml(product.desc)}</p>
+              <div class="tag-row">
+                ${product.tags.map(tag => `<span class="small-tag">${escapeHtml(tag)}</span>`).join("")}
+              </div>
+            </div>
+            <span class="score-badge">
+              <strong>${score}</strong>
+              <small>/ 5</small>
+            </span>
+          </div>
+        </button>
+      `;
+    }
+
+    function findSearchCategories(query) {
+      const normalizedQuery = query.trim().toLowerCase();
+      if (!normalizedQuery) return [];
+
+      const matchedCategories = new Set();
+      categories.forEach(category => {
+        if (category.toLowerCase().includes(normalizedQuery)) {
+          matchedCategories.add(category);
+        }
+      });
+
+      products.forEach(product => {
+        const nameMatches = product.name.toLowerCase().includes(normalizedQuery);
+        const categoryMatches = product.category.toLowerCase().includes(normalizedQuery);
+        if (nameMatches || categoryMatches) {
+          matchedCategories.add(product.category);
+        }
+      });
+
+      return [...matchedCategories];
+    }
+
+    function renderSearchPage(query) {
+      const cleanQuery = query.trim();
+      const matchedCategories = findSearchCategories(cleanQuery);
+
+      mainPage.classList.add("is-hidden");
+      detailPage.classList.remove("is-open");
+      searchPage.classList.add("is-open");
+      searchInput.value = cleanQuery;
+      renderSearchModes(cleanQuery);
+
+      searchTitle.textContent = `“${cleanQuery}” 검색 결과`;
+
+      if (!matchedCategories.length) {
+        searchDescription.textContent = "검색어와 연결된 상품 또는 카테고리를 찾지 못했습니다. 그래도 컴퓨터는 최선을 다했습니다. 아마도요.";
+        searchContent.innerHTML = `
+          <div class="empty-state">
+            검색 결과가 없습니다. 상품명이나 카테고리를 조금 더 짧게 입력해보세요.
+          </div>
+        `;
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        return;
+      }
+
+      searchDescription.textContent = `검색어와 연결된 ${matchedCategories.length}개 카테고리에서 ${modes[activeMode].label} 기준 상위 3개 상품을 추천합니다.`;
+
+      const groups = matchedCategories.map(category => {
+        const topItems = products
+          .filter(product => product.category === category)
+          .slice()
+          .sort((a, b) => weightedScore(b, activeMode) - weightedScore(a, activeMode))
+          .slice(0, 3);
+        return { category, items: topItems };
+      }).filter(group => group.items.length);
+
+      searchContent.innerHTML = groups.map(group => `
+        <article class="category-group">
+          <div class="group-head">
+            <h3 class="group-title"><span class="group-icon">${categoryIcons[group.category] || "📦"}</span>${escapeHtml(group.category)}</h3>
+            <span class="group-count">${modes[activeMode].label} 상위 ${group.items.length}개</span>
+          </div>
+          <div class="product-grid">
+            ${group.items.map(product => renderCard(product)).join("")}
+          </div>
+          <p class="search-category-note">검색어와 연결된 카테고리에서 선택한 기준의 점수순으로 정렬했습니다.</p>
+        </article>
+      `).join("");
+
+      searchContent.querySelectorAll("[data-product-id]").forEach(card => {
+        card.addEventListener("click", () => {
+          location.hash = `product=${card.dataset.productId}`;
+        });
+      });
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function showDetail(productId) {
+      const product = products.find(item => item.id === productId);
+
+      if (!product) {
+        goHome();
+        return;
+      }
+
+      mainPage.classList.add("is-hidden");
+      searchPage.classList.remove("is-open");
+      detailPage.classList.add("is-open");
+
+      const score = weightedScore(product).toFixed(2);
+      const modeOptions = Object.entries(modes).map(([key, mode]) => {
+        return `<option value="${key}" ${key === activeMode ? "selected" : ""}>${mode.label}</option>`;
+      }).join("");
+
+      detailContent.innerHTML = `
+        <article class="detail-card detail-visual">
+          <div class="detail-photo" aria-hidden="true">
+            ${productImageMarkup(product)}
+          </div>
+          <h1 class="detail-title">${escapeHtml(product.name)}</h1>
+          <p class="detail-subtitle">${escapeHtml(product.desc)}</p>
+          <div class="tag-row" style="justify-content:center">
+            ${product.tags.map(tag => `<span class="small-tag">${escapeHtml(tag)}</span>`).join("")}
+          </div>
+          <div class="info-grid">
+            <div class="info-item"><span>브랜드</span><strong>${escapeHtml(product.brand)}</strong></div>
+            <div class="info-item"><span>카테고리</span><strong>${escapeHtml(product.category)}</strong></div>
+            <div class="info-item"><span>SalesRank</span><strong>${escapeHtml(product.capacity)}</strong></div>
+            <div class="info-item"><span>Amazon 링크</span><strong><a href="${escapeHtml(product.amazonUrl)}" target="_blank" rel="noreferrer">상품 검색 열기</a></strong></div>
+          </div>
+        </article>
+
+        <article class="detail-card score-panel">
+          <div class="panel-head">
+            <div>
+              <h2>소비 점수</h2>
+              <p>${modes[activeMode].desc}</p>
+            </div>
+            <div class="total-score" aria-label="모드별 가중 총점 ${score}점">
+              <div>
+                <strong>${score}</strong>
+                <span>/ 5 총점</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="select-row">
+            <label for="detailMode">소비 모드 선택</label>
+            <select id="detailMode" class="mode-select">
+              ${modeOptions}
+            </select>
+            <div class="weight-list">
+              ${scoreKeys.map(item => `<span class="weight-pill">${item.label} ${Math.round(modes[activeMode].weights[item.key] * 100)}%</span>`).join("")}
+            </div>
+          </div>
+
+          <div class="score-list">
+            ${scoreKeys.map(item => {
+              const value = product.scores[item.key];
+              return `
+                <div class="score-row">
+                  <div class="score-row-name">${item.label}</div>
+                  <div class="star-line">
+                    ${starRating(value)}
+                    <div class="bar" aria-hidden="true"><span style="width:${(value / 5) * 100}%"></span></div>
+                  </div>
+                  <div class="row-score">${value.toFixed(1)}</div>
+                </div>
+              `;
+            }).join("")}
+          </div>
+
+          <div class="mode-note">
+            현재 총점 계산식: ${modeWeightText(activeMode)}. 세부 점수는 모두 5점 만점이며, 모드별 가중치를 적용해 총점을 계산합니다.<br><br><strong>점수 근거:</strong> ${escapeHtml(product.desc)}<br><strong>주의:</strong> ${escapeHtml(product.warning || "실시간 데이터는 PA-API로 재검증 필요")}
+          </div>
+        </article>
+      `;
+
+      document.getElementById("detailMode").addEventListener("change", event => {
+        activeMode = event.target.value;
+        renderMainModes();
+        showDetail(product.id);
+      });
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function goHome() {
+      if (location.hash) {
+        history.pushState("", document.title, window.location.pathname + window.location.search);
+      }
+      searchPage.classList.remove("is-open");
+      detailPage.classList.remove("is-open");
+      mainPage.classList.remove("is-hidden");
+      renderMainModes();
+      renderProducts();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function handleRoute() {
+      const hash = decodeURIComponent(location.hash.replace("#", ""));
+      if (hash.startsWith("product=")) {
+        showDetail(hash.replace("product=", ""));
+      } else if (hash.startsWith("search=")) {
+        renderSearchPage(hash.replace("search=", ""));
+      } else {
+        searchPage.classList.remove("is-open");
+        detailPage.classList.remove("is-open");
+        mainPage.classList.remove("is-hidden");
+      }
+    }
+
+    searchForm.addEventListener("submit", event => {
+      event.preventDefault();
+      const query = searchInput.value.trim();
+      if (!query) return;
+      location.hash = `search=${encodeURIComponent(query)}`;
+    });
+
+    window.addEventListener("hashchange", handleRoute);
+
+    renderMainModes();
+    renderCategoryChips();
+    renderProducts();
+    handleRoute();
+  </script>
+</body>
+</html>
