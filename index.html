@@ -813,6 +813,69 @@
       font-size: 0.83rem;
     }
 
+
+    .custom-weight-panel {
+      width: 100%;
+      max-width: 860px;
+      display: grid;
+      gap: 10px;
+      margin-top: 8px;
+      padding: 14px;
+      border: 1px solid #dce8ef;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 10px 24px rgba(17, 24, 39, 0.04);
+    }
+
+    .custom-weight-title {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      color: #475467;
+      font-weight: 950;
+      font-size: 0.92rem;
+    }
+
+    .custom-weight-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .custom-weight-item {
+      display: grid;
+      gap: 7px;
+      padding: 10px;
+      border: 1px solid #e3ebf2;
+      border-radius: 16px;
+      background: #fff;
+    }
+
+    .custom-weight-item label {
+      color: #344054;
+      font-weight: 950;
+      font-size: 0.86rem;
+    }
+
+    .custom-weight-item input[type="range"] {
+      width: 100%;
+    }
+
+    .custom-weight-value {
+      color: #336f79;
+      font-weight: 950;
+      font-size: 0.84rem;
+    }
+
+    @media (max-width: 760px) {
+      .custom-weight-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+
     .score-list {
       display: grid;
       gap: 10px;
@@ -1047,7 +1110,7 @@
       <section id="groups" class="groups" aria-live="polite"></section>
 
       <p class="footer-note">
-        <strong>데이터 안내:</strong> 이 페이지는 CSV에 정리된 실제 Amazon 식료품 상품명과 category별 SalesRank 순위 기반 발표용 데이터셋을 사용합니다. 단, 이미지 URL과 실시간 SalesRank는 PA-API로 재검증해야 합니다. 데이터 출처를 흐리면 발표가 아니라 마술쇼가 됩니다.
+        <strong>데이터 안내:</strong> 이 페이지는 CSV에 정리된 실제 Amazon 식료품 상품명과 category별 SalesRank 순위 기반 발표용 데이터셋을 사용합니다. 단, 이미지 URL과 실시간 SalesRank는 PA-API로 재검증해야 합니다. 발표 전 이미지 URL과 실시간 SalesRank는 PA-API로 재검증하는 것을 권장합니다.
       </p>
     </section>
 
@@ -1083,31 +1146,39 @@
       { key: "social", label: "사회적 책임" }
     ];
 
+    let customWeights = {
+      health: 0.2,
+      value: 0.2,
+      environment: 0.2,
+      welfare: 0.2,
+      social: 0.2
+    };
+
     const modes = {
       health: {
         label: "건강 모드",
-        desc: "영양 균형, 안전성, 저당·저나트륨 같은 건강 요소를 가장 크게 반영합니다.",
-        weights: { health: 0.45, value: 0.15, environment: 0.15, welfare: 0.10, social: 0.15 }
+        desc: "건강성 점수의 가중치를 가장 크게 반영합니다.",
+        weights: { health: 0.3, value: 0.175, environment: 0.175, welfare: 0.175, social: 0.175 }
       },
       eco: {
         label: "친환경 모드",
-        desc: "포장재, 재활용성, 탄소 배출 저감 등 환경 요소를 가장 크게 반영합니다.",
-        weights: { health: 0.15, value: 0.10, environment: 0.45, welfare: 0.15, social: 0.15 }
+        desc: "환경성 점수의 가중치를 가장 크게 반영합니다.",
+        weights: { health: 0.175, value: 0.175, environment: 0.3, welfare: 0.175, social: 0.175 }
       },
       saving: {
         label: "절약 모드",
-        desc: "가격 대비 용량과 실사용 효율을 가장 크게 반영합니다.",
-        weights: { health: 0.15, value: 0.50, environment: 0.10, welfare: 0.10, social: 0.15 }
-      },
-      family: {
-        label: "가족 모드",
-        desc: "가족 단위 소비에 맞춰 건강성과 가성비를 균형 있게 크게 반영합니다.",
-        weights: { health: 0.35, value: 0.25, environment: 0.15, welfare: 0.10, social: 0.15 }
+        desc: "가성비 점수의 가중치를 가장 크게 반영합니다.",
+        weights: { health: 0.175, value: 0.3, environment: 0.175, welfare: 0.175, social: 0.175 }
       },
       ethical: {
         label: "윤리 소비 모드",
-        desc: "환경성, 동물복지, 사회적 책임을 중심으로 반영합니다.",
-        weights: { health: 0.10, value: 0.10, environment: 0.30, welfare: 0.25, social: 0.25 }
+        desc: "사회적 책임 점수의 가중치를 가장 크게 반영합니다.",
+        weights: { health: 0.175, value: 0.175, environment: 0.175, welfare: 0.175, social: 0.3 }
+      },
+      custom: {
+        label: "사용자 설정 모드",
+        desc: "사용자가 직접 설정한 가중치를 기준으로 소비 점수를 계산합니다.",
+        weights: customWeights
       }
     };
 
@@ -5071,9 +5142,31 @@
       return `<span>${escapeHtml(product.image || "📦")}</span>`;
     }
 
+    function getModeWeights(modeKey = activeMode) {
+      const sourceWeights = modeKey === "custom" ? customWeights : modes[modeKey].weights;
+      const total = scoreKeys.reduce((sum, item) => sum + Number(sourceWeights[item.key] || 0), 0);
+
+      if (total <= 0) {
+        return scoreKeys.reduce((weights, item) => {
+          weights[item.key] = 0.2;
+          return weights;
+        }, {});
+      }
+
+      return scoreKeys.reduce((weights, item) => {
+        weights[item.key] = Number(sourceWeights[item.key] || 0) / total;
+        return weights;
+      }, {});
+    }
+
+    function formatPercent(value) {
+      const percent = value * 100;
+      return Number.isInteger(percent) ? `${percent}%` : `${percent.toFixed(1)}%`;
+    }
+
     function weightedScore(product, modeKey = activeMode) {
-      const mode = modes[modeKey];
-      const raw = scoreKeys.reduce((sum, item) => sum + product.scores[item.key] * mode.weights[item.key], 0);
+      const weights = getModeWeights(modeKey);
+      const raw = scoreKeys.reduce((sum, item) => sum + product.scores[item.key] * weights[item.key], 0);
       return Math.round(raw * 100) / 100;
     }
 
@@ -5088,14 +5181,52 @@
     }
 
     function modeWeightText(modeKey) {
-      return scoreKeys.map(item => `${item.label} ${Math.round(modes[modeKey].weights[item.key] * 100)}%`).join(" · ");
+      const weights = getModeWeights(modeKey);
+      return scoreKeys.map(item => `${item.label} ${formatPercent(weights[item.key])}`).join(" · ");
+    }
+
+    function customWeightTotal() {
+      return scoreKeys.reduce((sum, item) => sum + Number(customWeights[item.key] || 0), 0);
+    }
+
+    function renderCustomWeightPanel(context) {
+      if (activeMode !== "custom") return "";
+      const total = customWeightTotal();
+      return `
+        <div class="custom-weight-panel" data-custom-context="${context}">
+          <div class="custom-weight-title">
+            <span>사용자 설정 가중치</span>
+            <span>현재 입력 합계 ${total.toFixed(3)} · 계산 시 100% 기준으로 자동 정규화</span>
+          </div>
+          <div class="custom-weight-grid">
+            ${scoreKeys.map(item => `
+              <div class="custom-weight-item">
+                <label for="${context}-weight-${item.key}">${item.label}</label>
+                <input id="${context}-weight-${item.key}" type="range" min="0" max="1" step="0.025" value="${customWeights[item.key]}" data-weight-key="${item.key}">
+                <span class="custom-weight-value">입력값 ${customWeights[item.key].toFixed(3)} · 반영 ${formatPercent(getModeWeights("custom")[item.key])}</span>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    function attachCustomWeightListeners(container, rerender) {
+      container.querySelectorAll("[data-weight-key]").forEach(input => {
+        input.addEventListener("input", event => {
+          const key = event.target.dataset.weightKey;
+          customWeights[key] = Number(event.target.value);
+          modes.custom.weights = customWeights;
+          rerender();
+        });
+      });
     }
 
     function renderMainModes() {
       const buttons = Object.entries(modes).map(([key, mode]) => {
         return `<button class="mode-button ${key === activeMode ? "is-active" : ""}" type="button" data-mode="${key}">${mode.label}</button>`;
       }).join("");
-      mainModeButtons.innerHTML = `<span class="mode-label">총점 기준</span>${buttons}`;
+      mainModeButtons.innerHTML = `<span class="mode-label">총점 기준</span>${buttons}${renderCustomWeightPanel("main")}`;
 
       mainModeButtons.querySelectorAll("[data-mode]").forEach(button => {
         button.addEventListener("click", () => {
@@ -5104,13 +5235,18 @@
           renderProducts();
         });
       });
+
+      attachCustomWeightListeners(mainModeButtons, () => {
+        renderMainModes();
+        renderProducts();
+      });
     }
 
     function renderSearchModes(query) {
       const buttons = Object.entries(modes).map(([key, mode]) => {
         return `<button class="mode-button ${key === activeMode ? "is-active" : ""}" type="button" data-mode="${key}">${mode.label}</button>`;
       }).join("");
-      searchModeButtons.innerHTML = `<span class="mode-label">추천 기준</span>${buttons}`;
+      searchModeButtons.innerHTML = `<span class="mode-label">추천 기준</span>${buttons}${renderCustomWeightPanel("search")}`;
 
       searchModeButtons.querySelectorAll("[data-mode]").forEach(button => {
         button.addEventListener("click", () => {
@@ -5118,6 +5254,11 @@
           renderMainModes();
           renderSearchPage(query);
         });
+      });
+
+      attachCustomWeightListeners(searchModeButtons, () => {
+        renderMainModes();
+        renderSearchPage(query);
       });
     }
 
@@ -5277,7 +5418,7 @@
       searchTitle.textContent = `“${cleanQuery}” 검색 결과`;
 
       if (!matchedCategories.length) {
-        searchDescription.textContent = "검색어와 연결된 상품 또는 카테고리를 찾지 못했습니다. 그래도 컴퓨터는 최선을 다했습니다. 아마도요.";
+        searchDescription.textContent = "검색어와 연결된 상품 또는 카테고리를 찾지 못했습니다.";
         searchContent.innerHTML = `
           <div class="empty-state">
             검색 결과가 없습니다. 상품명이나 카테고리를 조금 더 짧게 입력해보세요.
@@ -5375,8 +5516,9 @@
               ${modeOptions}
             </select>
             <div class="weight-list">
-              ${scoreKeys.map(item => `<span class="weight-pill">${item.label} ${Math.round(modes[activeMode].weights[item.key] * 100)}%</span>`).join("")}
+              ${scoreKeys.map(item => `<span class="weight-pill">${item.label} ${formatPercent(getModeWeights(activeMode)[item.key])}</span>`).join("")}
             </div>
+            ${renderCustomWeightPanel("detail")}
           </div>
 
           <div class="score-list">
@@ -5403,6 +5545,11 @@
 
       document.getElementById("detailMode").addEventListener("change", event => {
         activeMode = event.target.value;
+        renderMainModes();
+        showDetail(product.id);
+      });
+
+      attachCustomWeightListeners(detailContent, () => {
         renderMainModes();
         showDetail(product.id);
       });
