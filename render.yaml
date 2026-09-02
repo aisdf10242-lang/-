@@ -1,0 +1,14 @@
+# One-click deploy blueprint for Render (render.com).
+# On Render: New + -> Blueprint -> connect this GitHub repo -> Apply.
+# Builds the PWA and starts the combined server (serves the app + API from
+# one URL), so there is nothing else to configure.
+services:
+  - type: web
+    name: longshort-binance-app
+    runtime: node
+    plan: free
+    buildCommand: cd app && npm install && npm run build && cd ../server && npm install
+    startCommand: cd server && npm start
+    envVars:
+      - key: NODE_VERSION
+        value: "22"

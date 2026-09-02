@@ -73,13 +73,31 @@ RSI, MACD, EMA 크로스, 볼린저 %B, 거래량 z-score 등을 특징으로 �
 3. 앱 설정 화면에서 API 주소를 배포된 프록시 URL로 변경합니다.
 4. 실거래 전환 전 충분한 기간 동안 dry-run 결과와 확률의 실효성을 검증합니다.
 
-## PWA 설치
+## 폰으로만 배포하기 (터미널 불필요)
 
-`app`을 빌드/배포한 뒤 모바일 브라우저에서 열면 "홈 화면에 추가"로 설치할 수
-있습니다 (매니페스트/서비스워커는 `vite-plugin-pwa`로 구성됨).
+컴퓨터 없이 폰 브라우저만으로 실제 접속 가능한 URL을 만들 수 있습니다.
+`server/`가 빌드된 `app/`을 같은 프로세스에서 함께 서빙하도록 되어 있어서,
+서비스 하나만 배포하면 API와 앱이 한 주소에서 동작합니다(별도 CORS/설정 불필요).
+
+**Render 사용 (무료, 카드 등록 불필요):**
+
+1. 폰 브라우저로 [render.com](https://render.com) 접속 → GitHub 계정으로 로그인.
+2. **New +** → **Blueprint** 선택 → 이 저장소(`aisdf10242-lang/-`) 연결.
+3. 저장소 루트의 `render.yaml`을 자동으로 인식합니다 → **Apply** 클릭.
+4. 몇 분 뒤 `https://longshort-binance-app.onrender.com` 같은 주소가 생성됩니다.
+   폰 브라우저로 열고 "홈 화면에 추가"를 하면 앱처럼 설치됩니다.
+5. 무료 플랜은 일정 시간 미사용 시 슬립 상태가 되어 첫 접속이 느릴 수 있습니다.
+
+Render 대신 Railway를 써도 됩니다 — 빌드 커맨드
+`cd app && npm install && npm run build && cd ../server && npm install`,
+시작 커맨드 `cd server && npm start`를 동일하게 입력하면 됩니다.
+
+배포되는 것은 여전히 **목업 데이터**입니다(`server/`). 실제 Binance/freqtrade
+연동은 위 "실 서비스 연동 로드맵"을 따로 진행해야 합니다.
+
+## 로컬 프로덕션 빌드 미리보기
 
 ```bash
-cd app
-npm run build
-npm run preview
+cd app && npm run build
+cd ../server && npm start   # http://localhost:8787 에서 앱+API 동시 서빙
 ```
