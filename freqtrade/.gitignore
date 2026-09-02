@@ -1,0 +1,6 @@
+config.json
+user_data/.env
+user_data/models/
+user_data/logs/
+user_data/backtest_results/
+user_data/notebooks/

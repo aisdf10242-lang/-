@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #0b1120;
+  --color-surface: #111a2e;
+  --color-surface-2: #17233d;
+  --color-border: #223252;
+  --color-long: #22c55e;
+  --color-short: #f43f5e;
+  --color-muted: #8ba0c6;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  background: var(--color-bg);
+  color: #eef2ff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Pretendard", sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: none;
+}
+
+/* Keep the app usable without an install prompt while still feeling app-like */
+#root {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background: var(--color-bg);
+}
