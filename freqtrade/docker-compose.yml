@@ -1,0 +1,28 @@
+# Runs a real freqtrade + FreqAI instance against Binance.
+# Start in dry-run (paper trading) mode first — config.json.example has
+# dry_run: true by default. Never commit a real config.json with live keys.
+#
+# Usage:
+#   cp config.json.example config.json     # then fill in user_data/.env
+#   cp .env.example user_data/.env
+#   docker compose up -d
+#
+# The REST API (api_server) is exposed on :8080 — that's what the mobile
+# app's backend proxy should be pointed at (see /server and the app's
+# Settings screen).
+services:
+  freqtrade:
+    image: freqtradeorg/freqtrade:stable_freqai
+    restart: unless-stopped
+    env_file:
+      - user_data/.env
+    volumes:
+      - ./config.json:/freqtrade/user_data/config.json:ro
+      - ./strategies:/freqtrade/user_data/strategies:ro
+      - ./user_data:/freqtrade/user_data
+    ports:
+      - "127.0.0.1:8080:8080"
+    command: >
+      trade
+      --config /freqtrade/user_data/config.json
+      --strategy LongShortProbabilityStrategy
