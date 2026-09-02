@@ -1,7 +1,11 @@
 import type { PredictionDetail, PredictionSummary } from "./types";
 
 const STORAGE_KEY = "longshort.apiBaseUrl";
-const DEFAULT_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8787";
+// In production builds with no explicit override, call the same origin the
+// app was served from — the server serves both the API and the built app,
+// so a single deployed service just works with no config.
+const DEFAULT_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ?? (import.meta.env.PROD ? "" : "http://localhost:8787");
 
 export function getApiBaseUrl(): string {
   return localStorage.getItem(STORAGE_KEY) ?? DEFAULT_BASE_URL;
