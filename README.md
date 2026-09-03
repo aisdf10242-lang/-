@@ -66,11 +66,13 @@ RSI, MACD, EMA 크로스, 볼린저 %B, 거래량 z-score 등을 특징으로 �
 ## 실 서비스 연동 로드맵
 
 1. `freqtrade/`의 안내에 따라 Binance API 키(출금 권한 비활성화)로 freqtrade +
-   FreqAI 인스턴스를 dry-run으로 기동합니다.
-2. freqtrade REST API 응답을 이 앱이 기대하는 스키마
-   (`GET /api/v1/predictions`, `GET /api/v1/predictions/:pair`)로 변환하는
-   프록시를 작성해 `server/`의 목업 엔진을 대체합니다.
-3. 앱 설정 화면에서 API 주소를 배포된 프록시 URL로 변경합니다.
+   FreqAI 인스턴스를 상시 구동 서버에서 dry-run으로 기동합니다.
+2. freqtrade REST API를 앱이 기대하는 스키마로 변환하는 어댑터는 이미
+   `server/src/liveEngine.js` + `server/src/freqtradeClient.js`로 구현되어 있습니다 —
+   `FREQTRADE_API_URL`/`FREQTRADE_API_USERNAME`/`FREQTRADE_API_PASSWORD` 환경변수만
+   설정하면 `server/`가 목업(`simulation.js`) 대신 자동으로 이 어댑터를 씁니다.
+3. Render 대시보드의 Environment 탭에 그 환경변수들을 추가하면 끝 — 앱 코드는
+   전혀 손댈 필요가 없습니다. 자세한 절차는 [`freqtrade/README.md`](freqtrade/README.md).
 4. 실거래 전환 전 충분한 기간 동안 dry-run 결과와 확률의 실효성을 검증합니다.
 
 ## 폰으로만 배포하기 (터미널 불필요)
